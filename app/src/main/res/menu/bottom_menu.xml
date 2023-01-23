@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/stopwatchItem"
+        android:enabled="true"
+        android:icon="@drawable/stopwatch"
+        android:title="스톱워치" />
+
+    <item
+        android:id="@+id/timerItem"
+        android:enabled="true"
+        android:icon="@drawable/timer"
+        android:title="타이머" />
+
+    <item
+        android:id="@+id/recordItem"
+        android:enabled="true"
+        android:icon="@drawable/record"
+        android:title="기록" />
+
+</menu>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="250dp"
+    tools:context=".SettingScene">
+
+    <Button
+        android:id="@+id/settingCloseBtn"
+        android:layout_alignParentRight="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/delete" />
+
+    <LinearLayout
+        android:id="@+id/themeLay"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="테마"
+            android:textSize="20sp"
+            android:textAlignment="center" />
+
+        <RadioGroup
+            android:id="@+id/themeBtnGroup"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/lightThemeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Light" />
+
+            <RadioButton
+                android:id="@+id/darkThemeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dark" />
+
+            <RadioButton
+                android:id="@+id/defaultThemeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Default" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timeDefaultLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/themeLay" >
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="타이머 기본값"
+            android:textSize="15sp"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/timeDefaultEdit"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:hint="단위 : 초" />
+
+        <Button
+            android:id="@+id/timeDefaultBtn"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_background"
+            android:text="저장"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/producedByTex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:textSize="12sp" />
+
+</RelativeLayout>

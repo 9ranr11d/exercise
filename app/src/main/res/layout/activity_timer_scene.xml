@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TimerScene">
+
+    <ProgressBar
+        android:id="@+id/ringProgressBar"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ring_progress_bar_background"
+        android:indeterminateOnly="false"
+        android:progress="0"
+        android:progressDrawable="@drawable/ring_progress_bar" />
+
+    <LinearLayout
+        android:id="@+id/timerLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/minuteTex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="00"
+            android:textSize="100dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=":"
+            android:textSize="70dp" />
+
+        <TextView
+            android:id="@+id/secondTex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="00"
+            android:textSize="100dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/setLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="세트 수 : "
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/timerSetTex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="100dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/timeStopBtn">
+
+        <Button
+            android:id="@+id/reservationBtn"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_background"
+            android:layout_margin="5dp"
+            android:text="예약"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/reserCancelBtn"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_background"
+            android:layout_margin="5dp"
+            android:text="예약 취소"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/timeStopBtn"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:background="@drawable/button_background"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="정지"
+        android:textSize="20dp" />
+
+</RelativeLayout>

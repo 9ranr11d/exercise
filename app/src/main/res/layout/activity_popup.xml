@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".PopupActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/popupDate" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="부위"
+            android:textAlignment="center"
+            android:textSize="15dp" />
+
+        <Spinner
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/pTypeSpi" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="이름"
+            android:textAlignment="center"
+            android:textSize="15dp" />
+
+        <EditText
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/eNameTex" />
+
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/delete"
+            android:id="@+id/eNameDelBtn" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="세트"
+            android:textAlignment="center"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/eSetTex" />
+
+        <Button
+            android:id="@+id/popPBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/plus2" />
+
+        <Button
+            android:id="@+id/popMBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/minus2" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="무게 / 횟수"
+            android:textAlignment="center"
+            android:textSize="15dp" />
+
+        <ScrollView
+            android:layout_width="200dp"
+            android:layout_height="100dp" >
+
+            <GridLayout
+                android:id="@+id/popVolnNumGridLay"
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:columnCount="3"
+                android:orientation="horizontal"
+                android:rowCount="10" >
+
+            </GridLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center" >
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_background"
+            android:layout_margin="3dp"
+            android:id="@+id/okBtn"
+            android:text="수정"
+            android:textSize="15dp" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_background"
+            android:layout_margin="3dp"
+            android:id="@+id/insertBtn"
+            android:text="추가"
+            android:textSize="15dp" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_background"
+            android:layout_margin="3dp"
+            android:id="@+id/deleteBtn"
+            android:text="삭제"
+            android:textSize="15dp" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_background"
+            android:layout_margin="3dp"
+            android:id="@+id/cancelBtn"
+            android:text="취소"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

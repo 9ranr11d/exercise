@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">Exercise</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="weekdays">
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+        <item>일</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>1월</item>
+        <item>2월</item>
+        <item>3월</item>
+        <item>4월</item>
+        <item>5월</item>
+        <item>6월</item>
+        <item>7월</item>
+        <item>8월</item>
+        <item>9월</item>
+        <item>10월</item>
+        <item>11월</item>
+        <item>12월</item>
+    </string-array>
+
+    <string-array name="exerciseType">
+        <item>가슴</item>
+        <item>등</item>
+        <item>하체</item>
+        <item>어깨</item>
+        <item>복근</item>
+        <item>이두</item>
+        <item>삼두</item>
+    </string-array>
+    <!--빨, 주, 노, 초, 파, 남, 보-->
+    <integer-array name="exerTypeColor">
+        <item>0xFFDB4455</item>
+        <item>0xFFFF7F00</item>
+        <item>0xFFFDFD96</item>
+        <item>0xFF008000</item>
+        <item>0xFF4AA8D8</item>
+        <item>0xFF0E0F37</item>
+        <item>0xFF8B00FF</item>
+    </integer-array>
+
+</resources>

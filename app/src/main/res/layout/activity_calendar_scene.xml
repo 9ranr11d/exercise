@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    tools:context=".CalendarScene">
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_corner_rectangle"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cSAddBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/add" />
+
+            <TextView
+                android:id="@+id/cSTitleTex"
+                android:layout_width="260dp"
+                android:layout_height="30dp"
+                android:text="제목"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/cSTopBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/top" />
+
+            <Button
+                android:id="@+id/cSCloseBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/delete" />
+
+        </LinearLayout>
+
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <GridLayout
+                android:id="@+id/gridLay"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_gravity="center_horizontal"
+                android:useDefaultMargins="true"
+                android:columnCount="3"
+                android:orientation="horizontal"
+                android:paddingBottom="80dp"
+                android:rowCount="100">
+
+            </GridLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

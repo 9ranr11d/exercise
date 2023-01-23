@@ -1,0 +1,36 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Exercise" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/lightColor</item>
+        <item name="colorPrimaryVariant">@color/lightColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/lightColor</item>
+        <item name="colorSecondaryVariant">@color/lightColor</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <!-- Title bar -->
+        <item name="windowNoTitle">true</item>
+        <!-- Second background-->
+        <item name="backgroundColor">@color/hLvGray</item>
+    </style>
+    <style name="Calendar" parent="Theme.Material3.Light">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="RestTimeNumPick">
+        <item name="android:textSize">80dp</item>
+    </style>
+    <style name="PopupStyle" parent="Theme.Material3.Light.Dialog">
+        <item name="colorPrimary">@color/lightColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorHighlight">@color/lightColor</item>
+        <item name="background">@color/white</item>
+        <item name="hintTextColor">@color/mLvGray</item>
+    </style>
+</resources>
