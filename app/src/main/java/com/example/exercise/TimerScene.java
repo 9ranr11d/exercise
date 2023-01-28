@@ -242,6 +242,10 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                     }
                     Log.d(TAG, "reps per set = " + Arrays.toString(iRPS));
                 }
+
+                if(!numEdit.getText().toString().equals(""))
+                    iRPS[setNum - 1] = Integer.parseInt(numEdit.getText().toString());
+
                 Intent recordIntent = new Intent(getApplication(), RecordScene.class);
                 recordIntent.putExtra("set_n", setNum);
                 recordIntent.putExtra("eName", routine);

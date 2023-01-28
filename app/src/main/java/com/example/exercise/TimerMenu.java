@@ -51,10 +51,12 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "set num = " + setNum);
                 setSetNum(setNum);
                 //세트별 횟수 임시저장값
-                int tRPS = Integer.parseInt(getTScenIntent.getStringExtra("reps_per_set"));
-                Log.d(TAG, "reps per set = " + tRPS);
-
-                repsPerSet.append(setNum).append(":").append(tRPS).append(",");
+                String tGRPS = getTScenIntent.getStringExtra("reps_per_set");
+                if(!tGRPS.equals("")) {
+                    int tRPS = Integer.parseInt(getTScenIntent.getStringExtra("reps_per_set"));
+                    Log.d(TAG, "reps per set = " + tRPS);
+                    repsPerSet.append(setNum).append(":").append(tRPS).append(",");
+                }
             }
             else if(result.getResultCode() == Activity.RESULT_CANCELED) {
                 makeToast("취소되었습니다.");
@@ -137,12 +139,15 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                     //저장된 임시저장값이 있을 때만 실행
                     if(repsPerSet.length() != 0) {
                         String[] tRPS = repsPerSet.toString().split(",");
-
                         //세트별 횟수 임시저장값을 배열의 맞는 위치에 대입
                         for (String str : tRPS) {
                             String[] tStr = str.split(":");
-                            int tInt = Integer.parseInt(tStr[0]) - 1;
-                            iRPS[tInt] = Integer.parseInt(tStr[1]);
+                            int iStr = Integer.parseInt(tStr[0]);
+                            //임시저장된 값의 크기와 세트 수가 맞지 않을 때를 방지
+                            if(iStr <= setNum) {
+                                int tInt = iStr - 1;
+                                iRPS[tInt] = Integer.parseInt(tStr[1]);
+                            }
                         }
                         Log.d(TAG, "reps per set = " + Arrays.toString(iRPS));
                     }
