@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,9 +21,12 @@ import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 public class RecordScene extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "RecordScene";
     private int setNum = 0, editSize = MainActivity.DPI * 60, selSpinner = 0, texColor = 0, highlightColor = 0, hintColor = 0, routine = 0;
+    private int[] repsPerSet;
 
     private GridLayout reVolnNumGridLay;
 
@@ -75,10 +79,12 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         //세트 수를 받아옴
         Intent getRecordIntent = getIntent();
         setNum = getRecordIntent.getIntExtra("set_n", 0);
-        routine = getRecordIntent.getIntExtra("eName", 1);
-
         Log.d(TAG, "set num = " + setNum);
+        routine = getRecordIntent.getIntExtra("eName", 1);
         Log.d(TAG, "routine nume = " + routine);
+        repsPerSet = new int[setNum];
+        repsPerSet = getRecordIntent.getIntArrayExtra("reps_per_set");
+        Log.d(TAG, "reps per set = " + Arrays.toString(repsPerSet));
 
         eNameEdit.setText("routine" + routine);
         //세트 수만큼 무게 입력 Edit을 만듦
@@ -107,14 +113,20 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
             reVolnNumGridLay.addView(slash);
 
             numberEdit[i] = new EditText(getApplication());
+            //임시저장값이 없으면 생략
+            if(repsPerSet[i] != 0)
+                numberEdit[i].setText(String.valueOf(repsPerSet[i]));
+
             numberEdit[i].setHint("횟수");               //각 Edit에 해당 세트 번호를 띄움
             numberEdit[i].setHintTextColor(hintColor);
             numberEdit[i].setTextColor(texColor);
             numberEdit[i].setBackgroundTintList(ColorStateList.valueOf(texColor));
+            //커서, 핸들러
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 numberEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
 //                    numberEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.edit_text_view_handle));
             }
+
             numberEdit[i].setHighlightColor(highlightColor);
             numberEdit[i].setWidth(editSize);
             numberEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //Edit에 숫자만 입력 가능

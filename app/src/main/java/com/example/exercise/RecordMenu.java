@@ -167,7 +167,7 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
             for(int i = 0; i < typeAry.length; i++) {
                 typeList.add(Collections.frequency(dateType, date + ":" + typeAry[i]));     //부위별 빈도수를 typeList에 저장
             }
-            Log.d(TAG, "date type frequency = " + date + typeList);
+            Log.d(TAG, date + " type frequency = " + typeList);
             int colorNum = typeList.indexOf(Collections.max(typeList));                           //typeList의 최빈수의 위치를 저장
 
             Log.d(TAG, date + " color = " + Integer.toHexString(colorAry[colorNum]));

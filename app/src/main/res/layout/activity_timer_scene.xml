@@ -6,6 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".TimerScene">
 
+    <LinearLayout
+        android:id="@+id/setLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="세트 수 : "
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/timerSetTex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="100dp" />
+
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/ringProgressBar"
         android:layout_width="500dp"
@@ -50,26 +74,25 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/setLay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@id/timerLay"
+        android:layout_centerHorizontal="true" >
 
         <TextView
+            android:id="@+id/numTex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="세트 수 : "
-            android:textSize="30dp" />
+            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/timerSetTex"
+        <EditText
+            android:id="@+id/numEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="100dp" />
+            android:hint="횟수(메모)"
+            android:textSize="20sp"
+            android:inputType="number" />
 
     </LinearLayout>
 
@@ -104,9 +127,9 @@
         android:id="@+id/timeStopBtn"
         android:layout_width="150dp"
         android:layout_height="70dp"
-        android:background="@drawable/button_background"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_background"
         android:text="정지"
         android:textSize="20dp" />
 

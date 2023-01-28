@@ -42,7 +42,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     private Button okBtn, cancelBtn, deleteBtn, eNameDelBtn, popPBtn, popMBtn, insertBtn;
     private Spinner pTypeSpi;
 
-    private GridLayout popVolnNumGridLay;
+    private GridLayout popVolNumGridLay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +76,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         popMBtn.setOnClickListener(this);
         insertBtn.setOnClickListener(this);
         //레이아웃
-        popVolnNumGridLay = findViewById(R.id.popVolnNumGridLay);
+        popVolNumGridLay = findViewById(R.id.popVolnNumGridLay);
         //스피너
         pTypeSpi = findViewById(R.id.pTypeSpi);
         //운동부위, 운동무게의 스피너 목록
@@ -85,7 +85,6 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         ArrayAdapter pTypeAdapter = new ArrayAdapter(getApplication(), R.layout.spinner_cover, type);
         pTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pTypeSpi.setAdapter(pTypeAdapter);
-        pTypeSpi.setBackgroundColor(ContextCompat.getColor(this, R.color.color_background));
         //운동 부위 스피너 리스너
         pTypeSpi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -141,13 +140,13 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 volumeEdit[i].setWidth(editSize);
                 volumeEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                popVolnNumGridLay.addView(volumeEdit[i]);
+                popVolNumGridLay.addView(volumeEdit[i]);
 
                 slash[i] = new TextView(getApplication());
                 slash[i].setText((i + 1) + "회");
                 slash[i].setTextColor(texColor);
 
-                popVolnNumGridLay.addView(slash[i]);
+                popVolNumGridLay.addView(slash[i]);
 
                 numberEdit[i] = new EditText(getApplication());
                 numberEdit[i].setText(numberAry[i]);
@@ -163,7 +162,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 numberEdit[i].setWidth(editSize);
                 numberEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                popVolnNumGridLay.addView(numberEdit[i]);
+                popVolNumGridLay.addView(numberEdit[i]);
             }
             insertBtn.setEnabled(false);        //추가 버튼 비활성화
         }else {                                 //mode가 0일때
@@ -229,13 +228,13 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                     volumeEdit[i].setWidth(editSize);
                     volumeEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //입력값은 오직 숫자만
 
-                    popVolnNumGridLay.addView(volumeEdit[i]);                    //선택된 Edit 추가
+                    popVolNumGridLay.addView(volumeEdit[i]);                    //선택된 Edit 추가
 
                     slash[i] = new TextView(getApplication());
                     slash[i].setText((i + 1) + "회");
                     slash[i].setTextColor(texColor);
 
-                    popVolnNumGridLay.addView(slash[i]);
+                    popVolNumGridLay.addView(slash[i]);
 
                     numberEdit[i] = new EditText(getApplication());
                     numberEdit[i].setHint("횟수");
@@ -250,16 +249,16 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                     numberEdit[i].setWidth(editSize);
                     numberEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                    popVolnNumGridLay.addView(numberEdit[i]);
+                    popVolNumGridLay.addView(numberEdit[i]);
                 }
                 break;
             case R.id.popMBtn:      //세트수 감소
                 if(setNum > 0) {
                     setNum--;
                     eSetTex.setText(String.valueOf(setNum));
-                    popVolnNumGridLay.removeView(volumeEdit[setNum]);         //선택된 Edit 삭제
-                    popVolnNumGridLay.removeView(slash[setNum]);
-                    popVolnNumGridLay.removeView(numberEdit[setNum]);         //선`택된 Edit 삭제
+                    popVolNumGridLay.removeView(volumeEdit[setNum]);         //선택된 Edit 삭제
+                    popVolNumGridLay.removeView(slash[setNum]);
+                    popVolNumGridLay.removeView(numberEdit[setNum]);         //선`택된 Edit 삭제
                 }
                 break;
             case R.id.insertBtn:    //insert(추가) 버튼
@@ -360,10 +359,9 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 finish();
             }
         }catch (SQLiteConstraintException uniqueE) {
-            Exercise exer = MainActivity.exerciseDAO.eList.get(MainActivity.exerciseDAO.eList.size() - 1);
             Log.e(TAG, "unique exception");
-            Log.e(TAG, "seq = " + MainActivity.seq + " -> " + exer.getSeq() + 1);
-            MainActivity.seq = exer.getSeq() + 1;
+            Log.e(TAG, "seq = " + MainActivity.seq + " -> " + (MainActivity.lastSeq + 1));
+            MainActivity.seq = MainActivity.lastSeq + 1;
 
             insertSeq(selectType, selectName, selectVolume, selectNumber);
         }catch (Exception e) {

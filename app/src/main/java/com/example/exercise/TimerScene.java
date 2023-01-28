@@ -17,19 +17,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimerScene extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "TimerScene";
-    private int minute = 0, second = 0, setNum = 0, timeMNum = 0, timeSNum = 0, routine = 0, tScenMode = 0;
+    private int minute = 0, second = 0, setNum = 0, timeMNum = 0, timeSNum = 0, routine = 0, tSceneMode = 0;
+    private String repsPerSet = "";
 
-    private TextView minuteTex, secondTex, timerSetTex;
+    private TextView minuteTex, secondTex, timerSetTex, numTex;
+    private EditText numEdit;
     private Button timeStopBtn, reservationBtn, reserCancelBtn;
     private ProgressBar ringProgressBar;
 
@@ -58,7 +63,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
 
                 Toast.makeText(getApplication(), "기록이 예약되었습니다.", Toast.LENGTH_SHORT).show();
 
-                tScenMode = 1;      //1 : 예약, 0 : 예약 취소
+                tSceneMode = 1;      //1 : 예약, 0 : 예약 취소
             }else if(result.getResultCode() == RESULT_CANCELED) {
                 reservationBtn.setEnabled(true);
                 reserCancelBtn.setEnabled(false);
@@ -68,6 +73,11 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         minuteTex = findViewById(R.id.minuteTex);
         secondTex = findViewById(R.id.secondTex);
         timerSetTex = findViewById(R.id.timerSetTex);
+        numTex = findViewById(R.id.numTex);
+        //Edit
+        numEdit = findViewById(R.id.numEdit);
+
+        numEdit.setImeOptions(EditorInfo.IME_ACTION_DONE);  //키보드 내려가게
         //버튼
         timeStopBtn = findViewById(R.id.timeStopBtn);
         reservationBtn = findViewById(R.id.reservationBtn);
@@ -86,6 +96,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         timeSNum = getTimerIntent.getIntExtra("second", 0);
         setNum = getTimerIntent.getIntExtra("set_n", 0);
         routine = getTimerIntent.getIntExtra("routine", 1);
+        repsPerSet = getTimerIntent.getStringExtra("reps_per_set");
 
         minute = timeMNum;
         second = timeSNum;
@@ -94,10 +105,8 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         ringProgressBar.setMin(0);
         ringProgressBar.setProgress(getMaxTime(minute, second));
 
-        ++setNum;
-
-        timerSetTex.setText(String.valueOf(setNum));
-
+        timerSetTex.setText(String.valueOf(++setNum));
+        numTex.setText(setNum + "회째 : ");
         //타이머 시작
         restTimerTask = createTimerTask();
         timer.schedule(restTimerTask, 0, 1000);
@@ -134,12 +143,16 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                             }
 
                             successIntent.putExtra("set_n", setNum);
-
                             Log.d(TAG, "setNum = " + setNum);
 
-                            if(tScenMode == 0)
+                            if(tSceneMode == 0) {   //예약 X
+                                String tRPS = numEdit.getText().toString();
+                                successIntent.putExtra("reps_per_set", tRPS);
+                                Log.d(TAG, "reps per set = " + tRPS);
+
                                 setResult(RESULT_OK, successIntent);
-                            else
+                            }
+                            else                    //예약 O
                                 setResult(2, successIntent);
 
                             showNoti(TAG, "쉬는 시간 끝");
@@ -177,6 +190,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         notiIntent.putExtra("routine", routine);
 
         PendingIntent notiPendingIntent;
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             notiPendingIntent = PendingIntent.getActivity(getApplication(), 99, notiIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         }else {
@@ -187,6 +201,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         NotificationCompat.Builder notificationBuilder;
 
         notificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(new NotificationChannel("default", "기본 채널", NotificationManager.IMPORTANCE_DEFAULT));
             notificationBuilder = new NotificationCompat.Builder(getApplication(), "default");
@@ -215,9 +230,22 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.reservationBtn:   //예약
+                int[] iRPS = new int[setNum];
+                //저장된 임시저장값이 있을 때만 실행
+                if(repsPerSet.length() != 0) {
+                    String[] tRPS = repsPerSet.split(",");
+                    //세트별 횟수 임시저장값을 배열의 맞는 위치에 대입
+                    for (String str : tRPS) {
+                        String[] tStr = str.split(":");
+                        int tInt = Integer.parseInt(tStr[0]) - 1;
+                        iRPS[tInt] = Integer.parseInt(tStr[1]);
+                    }
+                    Log.d(TAG, "reps per set = " + Arrays.toString(iRPS));
+                }
                 Intent recordIntent = new Intent(getApplication(), RecordScene.class);
                 recordIntent.putExtra("set_n", setNum);
                 recordIntent.putExtra("eName", routine);
+                recordIntent.putExtra("reps_per_set", iRPS);
 
                 tSceneLauncher.launch(recordIntent);
                 //예약 버튼 비활성화, 예약취소 버튼 활성화
@@ -225,7 +253,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                 reserCancelBtn.setEnabled(true);
                 break;
             case R.id.reserCancelBtn:   //예약취소
-                tScenMode = 0;
+                tSceneMode = 0;
                 Toast.makeText(getApplication(), "예약 취소되었습니다.", Toast.LENGTH_SHORT).show();
                 //예약 버튼 활성화, 예약취소 버튼 비활성화
                 reservationBtn.setEnabled(true);

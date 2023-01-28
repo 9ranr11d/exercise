@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public final static String TAG = "MainActivity";
     public final static int MaxSetNum = 20;     //운동 세트수의 최대값
     public final static String sfFileName = "save_value";
-    public static int DPI, seq, setNum = 0, themeNum, timeDefault;
+    public static int DPI = 0, seq = 0, setNum = 0, themeNum = 0, timeDefault = 0, lastSeq = 0;
 
     private Button settingBtn;
 
@@ -72,8 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String sql = "SELECT * FROM exercise;";
         Cursor lookupCursor = db.rawQuery(sql,null);
         while(lookupCursor.moveToNext()) {
+            lastSeq = lookupCursor.getInt(0);
             exerciseDAO.insertObj(
-                    lookupCursor.getInt(0),
+                    lastSeq,
                     lookupCursor.getString(1),
                     lookupCursor.getString(2),
                     lookupCursor.getString(3),

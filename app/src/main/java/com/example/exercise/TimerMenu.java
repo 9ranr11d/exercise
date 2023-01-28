@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 //타이머 메뉴
 public class TimerMenu extends Fragment implements View.OnClickListener {
@@ -28,6 +30,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
     private int timeMNum = 1, timeSNum = 0, setNum = 0, routine = 0;
     private long now;
     private Date nowDate;
+    private StringBuilder repsPerSet = new StringBuilder();
 
     private TextView setTex;
     private NumberPicker minuteNumPick, secondNumPick;
@@ -45,7 +48,13 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
             Intent getTScenIntent = result.getData();
             if(result.getResultCode() == Activity.RESULT_OK) {
                 setNum = getTScenIntent.getIntExtra("set_n", 0);        //TimerScen으로 부터 세트 수 받아옴
+                Log.d(TAG, "set num = " + setNum);
                 setSetNum(setNum);
+                //세트별 횟수 임시저장값
+                int tRPS = Integer.parseInt(getTScenIntent.getStringExtra("reps_per_set"));
+                Log.d(TAG, "reps per set = " + tRPS);
+
+                repsPerSet.append(setNum).append(":").append(tRPS).append(",");
             }
             else if(result.getResultCode() == Activity.RESULT_CANCELED) {
                 makeToast("취소되었습니다.");
@@ -55,7 +64,6 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 String timerNum = getTScenIntent.getStringExtra("number");
                 String timerType = getTScenIntent.getStringExtra("type");
                 String timerName = getTScenIntent.getStringExtra("name");
-
                 //저장
                 tInsertSeq(getTime(), timerType, timerName, timerVol, timerNum);
 
@@ -119,14 +127,31 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 timerIntent.putExtra("second", secondNumPick.getValue());
                 timerIntent.putExtra("set_n", setNum);
                 timerIntent.putExtra("routine", routine);
+                timerIntent.putExtra("reps_per_set", repsPerSet.toString());
 
                 timerLauncher.launch(timerIntent);
                 break;
             case R.id.dbSaveBtn:    //기록
                 if(setNum != 0) {   //세트수가 없으면 기록 되지 않음
+                    int[] iRPS = new int[setNum];
+                    //저장된 임시저장값이 있을 때만 실행
+                    if(repsPerSet.length() != 0) {
+                        String[] tRPS = repsPerSet.toString().split(",");
+
+                        //세트별 횟수 임시저장값을 배열의 맞는 위치에 대입
+                        for (String str : tRPS) {
+                            String[] tStr = str.split(":");
+                            int tInt = Integer.parseInt(tStr[0]) - 1;
+                            iRPS[tInt] = Integer.parseInt(tStr[1]);
+                        }
+                        Log.d(TAG, "reps per set = " + Arrays.toString(iRPS));
+                    }
+
                     Intent recordIntent = new Intent(getActivity(), RecordScene.class);
                     recordIntent.putExtra("set_n", setNum);
                     recordIntent.putExtra("eName", routine);
+                    recordIntent.putExtra("reps_per_set", iRPS);
+
 
                     timerLauncher.launch(recordIntent);
                 }else {
@@ -180,10 +205,9 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 setSetNum(setNum);
             }
         }catch (SQLiteConstraintException uniqueE) {
-            Exercise exer = MainActivity.exerciseDAO.eList.get(MainActivity.exerciseDAO.eList.size() - 1);
             Log.e(TAG, "unique exception");
-            Log.e(TAG, "seq = " + MainActivity.seq + " -> " + exer.getSeq() + 1);
-            MainActivity.seq = exer.getSeq() + 1;
+            Log.e(TAG, "seq = " + MainActivity.seq + " -> " + (MainActivity.lastSeq + 1));
+            MainActivity.seq = MainActivity.lastSeq + 1;
 
             tInsertSeq(selectDate, selectType, selectName, selectVolume, selectNumber);
         }catch (Exception e) {
