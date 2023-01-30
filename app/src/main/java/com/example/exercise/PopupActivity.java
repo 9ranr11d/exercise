@@ -1,6 +1,6 @@
 package com.example.exercise;
 
-import static com.example.exercise.MainActivity.MaxSetNum;
+import static com.example.exercise.MainActivity.maxSet;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -36,9 +36,9 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     private int setNum = 0, texColor = 0, highlightColor = 0, hintColor = 0;
 
     private EditText eNameTex;
-    private EditText[] volumeEdit = new EditText[MaxSetNum], numberEdit = new EditText[MaxSetNum];
+    private EditText[] volumeEdit = new EditText[maxSet], numberEdit = new EditText[maxSet];
     private TextView popupTex, eSetTex;
-    private TextView[] slash = new TextView[MaxSetNum];
+    private TextView[] slash = new TextView[maxSet];
     private Button okBtn, cancelBtn, deleteBtn, eNameDelBtn, popPBtn, popMBtn, insertBtn;
     private Spinner pTypeSpi;
 
@@ -209,7 +209,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 manager.showSoftInput(eNameTex, InputMethodManager.SHOW_IMPLICIT);
                 break;
             case R.id.popPBtn:      //세트수 추가
-                if(setNum < MaxSetNum) {
+                if(setNum < maxSet) {
                     setNum++;
                     eSetTex.setText(String.valueOf(setNum));
 

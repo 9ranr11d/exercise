@@ -1,6 +1,6 @@
 package com.example.exercise;
 
-import static com.example.exercise.MainActivity.MaxSetNum;
+import static com.example.exercise.MainActivity.maxSet;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -116,7 +116,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.setPlusBtn:   //세트수 증가
-                if(setNum < MaxSetNum)
+                if(setNum < maxSet)
                     setTex.setText(String.valueOf(++setNum));
                 break;
             case R.id.setMinusBtn:  //세트수 감소

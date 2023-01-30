@@ -1,6 +1,6 @@
 package com.example.exercise;
 
-import static com.example.exercise.MainActivity.MaxSetNum;
+import static com.example.exercise.MainActivity.maxSet;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -137,9 +137,9 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                             tenTimeFormat(second, secondTex);
                             tenTimeFormat(minute, minuteTex);
 
-                            if(setNum > MaxSetNum) {
-                                setNum = MaxSetNum;
-                                Toast.makeText(getApplication(), MaxSetNum + "세트가 넘어서 카운트가 되지 않습니다.", Toast.LENGTH_SHORT).show();;
+                            if(setNum > maxSet) {
+                                setNum = maxSet;
+                                Toast.makeText(getApplication(), maxSet + "세트가 넘어서 카운트가 되지 않습니다.", Toast.LENGTH_SHORT).show();;
                             }
 
                             successIntent.putExtra("set_n", setNum);

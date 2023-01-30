@@ -61,7 +61,7 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
         holder.dbTypeListTex.setText(tempText[2]);
         holder.dbNameListTex.setText(tempText[3]);
         holder.dbSetNListTex.setText(tempText[4]);
-        holder.dbVolumeListTex.setText(MainActivity.stringformat(tempText[5], tempText[6]));
+        holder.dbVolumeListTex.setText(MainActivity.stringFormat(tempText[5], tempText[6]));
 
 //        holder.dbDataListCheck.setOnCheckedChangeListener(null);
         //checkedMap에 저장되어있는 체크유무를 판별

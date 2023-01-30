@@ -29,9 +29,8 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public final static String TAG = "MainActivity";
-    public final static int MaxSetNum = 20;     //운동 세트수의 최대값
     public final static String sfFileName = "save_value";
-    public static int DPI = 0, seq = 0, setNum = 0, themeNum = 0, timeDefault = 0, lastSeq = 0;
+    public static int DPI = 0, seq = 0, setNum = 0, themeNum = 0, timeDefault = 0, lastSeq = 0, maxSet = 0;
 
     private Button settingBtn;
 
@@ -90,9 +89,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         seq = sf.getInt("seq", 0);
         Log.d(TAG, "in seq = " + seq);
         themeNum = sf.getInt("themeNum", -1);
-        Log.d(TAG, "in theme number = " + themeNum);
+        Log.d(TAG, "in themeNum = " + themeNum);
         timeDefault = sf.getInt("timeDefault", 60);
-        Log.d(TAG, "in time default value = " + timeDefault);
+        Log.d(TAG, "in timeDefault = " + timeDefault);
+        maxSet = sf.getInt("maxSet", 20);
+        Log.d(TAG, "in maxSet = " + maxSet);
         //저장된 테마 모드로 변경
         switch (MainActivity.themeNum) {
             case -1:
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bottomNavigationView.setSelectedItemId(R.id.timerItem);     //바텀 네비게이션 기본값을 TimerMenu로 설정
     }
     //두개의 배열을 하나씩 엮음
-    public static String stringformat(String str1, String str2) {
+    public static String stringFormat(String str1, String str2) {
         StringBuilder mergeStr = new StringBuilder();
 
         String[] tempStr1 = str1.split(",");
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.putInt("seq", seq);
         Log.d(TAG, "out seq = " + seq);
         editor.putInt("themeNum", themeNum);
-        Log.d(TAG, "out theme number = " + themeNum);
+        Log.d(TAG, "out themeNum = " + themeNum);
         editor.commit();
     }
     @Override

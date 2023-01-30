@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="250dp"
+    android:layout_height="280dp"
     tools:context=".SettingScene">
 
     <Button
@@ -59,6 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_below="@id/themeLay" >
 
         <TextView
@@ -73,10 +74,43 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
+            android:inputType="number"
             android:hint="단위 : 초" />
 
         <Button
             android:id="@+id/timeDefaultBtn"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_background"
+            android:text="저장"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/maxSetLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/timeDefaultLay" >
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="최대 세트 수"
+            android:textSize="15sp"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/maxSetEdit"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:inputType="number"
+            android:hint="세트 수" />
+
+        <Button
+            android:id="@+id/maxSetBtn"
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:background="@drawable/button_background"

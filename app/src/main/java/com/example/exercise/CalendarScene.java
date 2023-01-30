@@ -123,7 +123,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
                 btnStr.append(tempType).append("\n")
                         .append(tempName).append("\n")
                         .append(tempSet).append("\n")
-                        .append(MainActivity.stringformat(tempVolume, tempNumber));
+                        .append(MainActivity.stringFormat(tempVolume, tempNumber));
 
                 exerciseBtn = new Button(getApplication());
                 exerciseBtn.setText(btnStr.toString());
