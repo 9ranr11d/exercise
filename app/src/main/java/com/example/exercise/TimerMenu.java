@@ -69,6 +69,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 //저장
                 tInsertSeq(getTime(), timerType, timerName, timerVol, timerNum);
 
+                repsPerSet = new StringBuilder();
                 routine++;
             }
         });

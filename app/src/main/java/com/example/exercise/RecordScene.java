@@ -34,10 +34,14 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
     private EditText eNameEdit;
     private Button recordOkBtn, recordCalBtn;
     private Spinner eTypeSpi;
+
+    public static Activity recordScene;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_scene);
+
+        recordScene = RecordScene.this;
 
         texColor = ContextCompat.getColor(this, R.color.color_text);
         Log.d(TAG, "text color = " + Integer.toHexString(texColor));
@@ -197,5 +201,11 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         if(event.getAction() == MotionEvent.ACTION_OUTSIDE)
             return false;
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TimerScene.rSFlag = false;
     }
 }

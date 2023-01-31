@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         settingLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if(result.getResultCode() == Activity.RESULT_CANCELED) {  //취소
+            /*if(result.getResultCode() == Activity.RESULT_CANCELED) {  //취소
 
-            }
+            }*/
         });
         //DPI 구함
         DisplayMetrics metrics = new DisplayMetrics();

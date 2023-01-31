@@ -30,8 +30,10 @@ import java.util.TimerTask;
 
 public class TimerScene extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "TimerScene";
-    private int minute = 0, second = 0, setNum = 0, timeMNum = 0, timeSNum = 0, routine = 0, tSceneMode = 0;
+    private int minute = 0, second = 0, setNum = 0, timeMNum = 0, timeSNum = 0, routine = 0;
     private String repsPerSet = "";
+    private boolean reserveFlag = false;
+    public static boolean rSFlag = false;
 
     private TextView minuteTex, secondTex, timerSetTex, numTex;
     private EditText numEdit;
@@ -63,7 +65,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
 
                 Toast.makeText(getApplication(), "기록이 예약되었습니다.", Toast.LENGTH_SHORT).show();
 
-                tSceneMode = 1;      //1 : 예약, 0 : 예약 취소
+                reserveFlag = true;
             }else if(result.getResultCode() == RESULT_CANCELED) {
                 reservationBtn.setEnabled(true);
                 reserCancelBtn.setEnabled(false);
@@ -116,7 +118,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
-            public void run() {                                 //타이머를 메인스레드 X 새로운 스레드 O
+            public void run() {              //타이머를 메인스레드 X 새로운 스레드 O
                 runOnUiThread(new Runnable() {    //UI 변경은 메인스레드에서
                     @Override
                     public void run() {
@@ -145,17 +147,23 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                             successIntent.putExtra("set_n", setNum);
                             Log.d(TAG, "setNum = " + setNum);
 
-                            if(tSceneMode == 0) {   //예약 X
+                            if(!reserveFlag) {   //예약 X
                                 String tRPS = numEdit.getText().toString();
                                 successIntent.putExtra("reps_per_set", tRPS);
                                 Log.d(TAG, "reps per set = " + tRPS);
 
                                 setResult(RESULT_OK, successIntent);
                             }
-                            else                    //예약 O
+                            else                //예약 O
                                 setResult(2, successIntent);
 
                             showNoti(TAG, "쉬는 시간 끝");
+
+                            if(rSFlag) {
+                                RecordScene rS = (RecordScene) RecordScene.recordScene;
+                                rS.finish();
+                                Toast.makeText(getApplication(), "시간이 초과되어 취소되었습니다.", Toast.LENGTH_SHORT).show();
+                            }
 
                             finish();
                         }
@@ -231,6 +239,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                 break;
             case R.id.reservationBtn:   //예약
                 int[] iRPS = new int[setNum];
+                rSFlag = true;
                 //저장된 임시저장값이 있을 때만 실행
                 if(repsPerSet.length() != 0) {
                     String[] tRPS = repsPerSet.split(",");
@@ -257,7 +266,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                 reserCancelBtn.setEnabled(true);
                 break;
             case R.id.reserCancelBtn:   //예약취소
-                tSceneMode = 0;
+                reserveFlag = false;
                 Toast.makeText(getApplication(), "예약 취소되었습니다.", Toast.LENGTH_SHORT).show();
                 //예약 버튼 활성화, 예약취소 버튼 비활성화
                 reservationBtn.setEnabled(true);
