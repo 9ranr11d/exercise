@@ -49,6 +49,9 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer_scene);
+        //기존 푸쉬 알림 제거
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(1);
 
         tSceneLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             Intent getTRecordIntent = result.getData();
@@ -196,6 +199,8 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         notiIntent.putExtra("timeSNum", timeSNum);
         notiIntent.putExtra("setNum", setNum);
         notiIntent.putExtra("routine", routine);
+        notiIntent.putExtra("repsPerSet", repsPerSet + setNum + ":" + numEdit.getText().toString() + ",");
+        Log.i(TAG, "rps = " + repsPerSet);
 
         PendingIntent notiPendingIntent;
 

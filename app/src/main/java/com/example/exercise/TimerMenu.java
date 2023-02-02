@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 //타이머 메뉴
@@ -102,6 +101,11 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
         timeMNum = this.getArguments().getInt("timeMNum");
         setNum = this.getArguments().getInt("setNum");
         routine = this.getArguments().getInt("routine");
+
+        String tRPSS = this.getArguments().getString("repsPerSet");
+        if(!(tRPSS == null))
+            repsPerSet.append(tRPSS);
+        Log.i(TAG, "rps = " + repsPerSet.toString());
         //다른 프레그먼트로 넘어 갔다 오더라도 세트 개수 유지
         if(setNum == 0)
             setNum = MainActivity.setNum;
@@ -138,7 +142,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 if(setNum != 0) {   //세트수가 없으면 기록 되지 않음
                     int[] iRPS = new int[setNum];
                     //저장된 임시저장값이 있을 때만 실행
-                    if(repsPerSet.length() != 0) {
+                    if(!repsPerSet.toString().isEmpty()) {
                         String[] tRPS = repsPerSet.toString().split(",");
                         //세트별 횟수 임시저장값을 배열의 맞는 위치에 대입
                         for (String str : tRPS) {
@@ -166,13 +170,15 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 break;
             case R.id.tResetBtn:    //초기화
                 //시간을 초기값으로
-                timeMNum = 1;
-                timeSNum = 0;
+                timeMNum = MainActivity.timeDefault / 60;
+                timeSNum = MainActivity.timeDefault % 60;
                 minuteNumPick.setValue(timeMNum);
                 secondNumPick.setValue(timeSNum);
                 //세트수 초기화
                 setNum = 0;
                 setSetNum(setNum);
+                //횟수 임시저장값 초기화
+                repsPerSet = new StringBuilder();
                 break;
         }
     }

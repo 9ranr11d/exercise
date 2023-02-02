@@ -7,12 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -120,12 +117,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int tempTimeSNum = getNotiIntent.getIntExtra("timeSNum", tDTS);
         int tempSetNum = getNotiIntent.getIntExtra("setNum", 0);
         int tempRoutine = getNotiIntent.getIntExtra("routine", 1);
+        String repsPerSet = getNotiIntent.getStringExtra("repsPerSet");
+        Log.i(TAG, "rps = " + repsPerSet);
         //데이터를 프레그먼트로 전송을 위해 번들에 담음
         Bundle timerBundle = new Bundle();
         timerBundle.putInt("timeMNum", tempTimeMNum);
         timerBundle.putInt("timeSNum", tempTimeSNum);
         timerBundle.putInt("setNum", tempSetNum);
         timerBundle.putInt("routine", tempRoutine);
+        timerBundle.putString("repsPerSet", repsPerSet);
 
         timerMenu.setArguments(timerBundle);    //세이브 데이터 보냄
         //바텀네비게이션

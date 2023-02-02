@@ -2,7 +2,6 @@ package com.example.exercise;
 
 import static com.example.exercise.MainActivity.maxSet;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteConstraintException;
