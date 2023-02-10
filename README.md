@@ -61,80 +61,73 @@ exercise 0.1.2
 - 쉬는 시간 기본값 설정
 - 최대 세트 수 설정
 
-## 어려웠던점
-- DB에 바로 연결하지 않고, exercise라는 객체에 담고 exercise로 데이터를 처리 했던 부분
+## 특이사항 (*가독성을 위해 실제 코드와 다를 수 있습니다.*)
+- DB에 바로 연결하지 않고, exercise라는 객체에 담고, 데이터를 처리
 
 ``` java
-//Exercise.java 생성자
+//Exercise.java
 Exercise(int seq, String eDate, String eType, String eName, int setN, String eVolume, String eNumber) {
-        this.seq = seq;
-        this.eDate = eDate;
-        this.eType = eType;
-        this.eName = eName;
-        this.setN = setN;
-        this.eVolume = eVolume;
-        this.eNumber = eNumber;
+    this.seq = seq;             //id
+    this.eDate = eDate;         //날짜
+    this.eType = eType;         //운동 부위
+    this.eName = eName;         //운동 이름
+    this.setN = setN;           //세트 수
+    this.eVolume = eVolume;     //무게
+    this.eNumber = eNumber;     //횟수
+}
+
+//ExerciseDAO.java
+public class ExerciseDAO {
+    public ArrayList<Exercise> eList;
+
+    ExerciseDAO() {
+        eList = new ArrayList<>();
+    }
+    //eList에 추가하기
+    public void insertObj(int seq, String date, String type, String name, int setN, String volume, String number) {
+        Exercise exer = new Exercise(seq, date, type, name, setN, volume, number);
+        eList.add(exer);
+        //추가 후 정렬
+        Collections.sort(eList, new Comparator<Exercise>() {        //seq로 1차 날짜로 2차 정렬
+            @Override
+            public int compare(Exercise exer1, Exercise exer2) {
+                return Integer.compare(exer1.getSeq(), exer2.getSeq());
+            }
+        });
+        Collections.sort(eList, Exercise::compareTo);
+    }
 }
 
 //MainActivity.java
 @Override
-  protected void onCreate(Bundle savedInstanceState) {
-  //DB로 부터 데이터 받아옴
-  exerciseDAO = new ExerciseDAO();
-  //저장되있는 DB의 모든 데이터를 exercise객체에 담음
-  DBHelper helper = new DBHelper(this, "record.db", null, 1);
-  SQLiteDatabase db = helper.getReadableDatabase();
-  String sql = "SELECT * FROM exercise;";
-  Cursor lookupCursor = db.rawQuery(sql,null);
-  while(lookupCursor.moveToNext()) {
-  lastSeq = lookupCursor.getInt(0);
-  exerciseDAO.insertObj(
-    lastSeq,
-    lookupCursor.getString(1),
-    lookupCursor.getString(2),
-    lookupCursor.getString(3),
-    lookupCursor.getInt(4),
-    lookupCursor.getString(5),
-    lookupCursor.getString(6));
-  }
-  lookupCursor.close();
-  db.close();
-  helper.close();
+protected void onCreate(Bundle savedInstanceState) {
+    //DB로 부터 데이터 받아옴
+    exerciseDAO = new ExerciseDAO();
+    //저장되있는 DB의 모든 데이터를 exercise객체에 담음
+    DBHelper helper = new DBHelper(this, "record.db", null, 1);
+    SQLiteDatabase db = helper.getReadableDatabase();
+    String sql = "SELECT * FROM exercise;";
+    Cursor lookupCursor = db.rawQuery(sql,null);
+    while(lookupCursor.moveToNext()) {
+    lastSeq = lookupCursor.getInt(0);
+    exerciseDAO.insertObj(lastSeq,                      //마지막에 저장된 변수가 마지막 기록의 seq
+                          lookupCursor.getString(1),
+                          lookupCursor.getString(2),
+                          lookupCursor.getString(3),
+                          lookupCursor.getInt(4),
+                          lookupCursor.getString(5),
+                          lookupCursor.getString(6));
+    }
+    lookupCursor.close();
+    db.close();
+    helper.close();
 }
 ```
 
 - 같은 날짜안의 기록들의 운동부위의 빈도 수를 분석해 일정표시 색을 달리함
 
-``` java
-//distDate set에 중복 없게 날짜를 저장, dateType에는 날짜랑 부위를 짝지어서 저장
-HashSet<String> distDate = new HashSet<>();
-ArrayList<String> dateType = new ArrayList<>();
-for(Exercise exer : MainActivity.exerciseDAO.eList) {
-  distDate.add(exer.geteDate());
-  dateType.add(exer.geteDate() + ":" + exer.geteType());
-}
-//날짜별로 부위의 빈도수를 구하여 높은 부위별로 색상을 다르게 함
-for(String date : distDate) {
-  ArrayList<Integer> typeList = new ArrayList<>();
-  for(int i = 0; i < typeAry.length; i++) {
-  typeList.add(Collections.frequency(dateType, date + ":" + typeAry[i]));     //부위별 빈도수를 typeList에 저장
-}
-Log.d(TAG, date + " type frequency = " + typeList);
-int colorNum = typeList.indexOf(Collections.max(typeList));                   //typeList의 최빈수의 위치를 저장
-
-Log.d(TAG, date + " color = " + Integer.toHexString(colorAry[colorNum]));
-
-String[] markingDate = date.split("-");
-
-int markingYear = Integer.parseInt(markingDate[0]);
-int markingMonth = Integer.parseInt(markingDate[1]);
-int markingDay = Integer.parseInt(markingDate[2]);
-
-mCalendarView.addDecorator(new EventDecorator(colorAry[colorNum], Collections.singleton(CalendarDay.from(markingYear, markingMonth, markingDay)), 1));
-}
-```
-
 ``` xml
+<!--strings.xml-->
 <string-array name="exerciseType">
    <item>가슴</item>
    <item>등</item>
@@ -154,6 +147,178 @@ mCalendarView.addDecorator(new EventDecorator(colorAry[colorNum], Collections.si
   <item>0xFF0E0F37</item>
   <item>0xFF8B00FF</item>
 </integer-array>
+```
+
+``` java
+//distDate set에 중복 없게 날짜를 저장, dateType에는 날짜랑 부위를 짝지어서 저장
+HashSet<String> distDate = new HashSet<>();
+ArrayList<String> dateType = new ArrayList<>();
+for(Exercise exer : MainActivity.exerciseDAO.eList) {
+    distDate.add(exer.geteDate());                                //모든 기록의 날짜를 중복없이 나열
+    dateType.add(exer.geteDate() + ":" + exer.geteType());        //모든 기록을 ('날짜':'운동부위')의 쌍으로 나열
+}
+//날짜별로 부위의 빈도수를 구하여 높은 부위별로 색상을 다르게 함
+for(String date : distDate) {                                   //부위별 빈도수를 typeList에 저장          
+    ArrayList<Integer> typeList = new ArrayList<>();
+    for(int i = 0; i < typeAry.length; i++) {                     //typeAry : exerciseType(strings.xml 속 운동부위 String-array)
+    typeList.add(Collections.frequency(dateType, date + ":" + typeAry[i]));   //('날짜':'운동부위')로 저장한 리스트속에서 
+}                                                                             //('해당 날짜':'해당 운동부위')와 일치하는 데이터의 수
+
+int colorNum = typeList.indexOf(Collections.max(typeList));                   //typeList의 최빈수의 위치를 저장
+
+String[] markingDate = date.split("-");
+
+int markingYear = Integer.parseInt(markingDate[0]);
+int markingMonth = Integer.parseInt(markingDate[1]);
+int markingDay = Integer.parseInt(markingDate[2]);
+//Custom CalendarView의 날짜 밑에 점 찍는 함수(를 색상도 지정하게 수정)
+mCalendarView.addDecorator(new EventDecorator(colorAry[colorNum],
+                                              Collections.singleton(CalendarDay.from(markingYear, markingMonth, markingDay)),
+                                              1));
+}
+```
+
+- DB의 기본키(seq)를 auto increment가 아닌 자체적으로 처리를 위해 SharedPreferences로 별도로 변수를 저장했고, 그로 인해 예기치 못한 종료로 seq 미저장 될 때의 SQLiteConstraintException 예외처리
+
+``` java
+private void tInsertSeq(String selectDate, String selectType, String selectName, String selectVolume, String selectNumber) {
+    DBHelper helper = new DBHelper(getActivity(), "record.db", null, 1);
+    try {
+        if (helper.dataInsert(MainActivity.seq, selectDate, selectType, selectName, setNum, selectVolume, selectNumber)) {
+            MainActivity.exerciseDAO.insertObj(MainActivity.seq,
+                                               selectDate, selectType,
+                                               selectName,
+                                               setNum,
+                                               selectVolume,
+                                               selectNumber);
+            MainActivity.seq++;
+
+            makeToast(selectName + " (으)로 기록되었습니다.");
+
+            setNum = 0;
+            setSetNum(setNum);
+        }
+    }catch (SQLiteConstraintException uniqueE) {
+        MainActivity.seq = MainActivity.lastSeq + 1;    //마지막 기록의 seq를 가져와서 +1
+        //다른 Exception이 있는 지 확인을 위한 재귀함수
+        tInsertSeq(selectDate, selectType, selectName, selectVolume, selectNumber);
+    }catch (Exception e) {
+        e.printStackTrace();
+        makeToast("예기치 못한 오류입니다");
+    }
+    helper.close();
+}
+```
+
+- 세트 당 횟수를 임시저장 후 기록시 저장된 데이터 자동 입력
+
+``` java
+//TimerMenu.java
+@Override
+public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View v = inflater.inflate(R.layout.fragment_timer_menu, container, false);
+    timerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Intent getTScenIntent = result.getData();
+        if(result.getResultCode() == Activity.RESULT_OK) {          //Activity.RESULT_OK : 쉬는 시간 끝
+            setNum = getTScenIntent.getIntExtra("set_n", 0);        //TimerScen으로 부터 세트 수 받아옴
+            setSetNum(setNum);
+            //세트별 횟수 임시저장값
+            String tGRPS = getTScenIntent.getStringExtra("reps_per_set");
+            if(!tGRPS.equals("")) {
+                int tRPS = Integer.parseInt(getTScenIntent.getStringExtra("reps_per_set"));
+                //'세트 수':'임시저장값','세트 수':'임시저장값',...의 형태
+                repsPerSet.append(setNum).append(":").append(tRPS).append(",");
+            }
+    }
+}
+
+@Override
+public void onClick(View view) {
+    switch (view.getId()) {
+        case R.id.dbSaveBtn:    //기록
+            if(setNum != 0) {   //세트수가 없으면 기록 되지 않음
+            int[] iRPS = new int[setNum];
+            //저장된 임시저장값이 있을 때만 실행
+            if(!repsPerSet.toString().isEmpty()) {
+                String[] tRPS = repsPerSet.toString().split(",");
+                //세트별 횟수 임시저장값을 배열의 맞는 위치에 대입
+                for (String str : tRPS) {
+                    String[] tStr = str.split(":");
+                    int iStr = Integer.parseInt(tStr[0]);
+                    //임시저장된 값의 크기와 세트 수가 맞지 않을 때를 방지
+                    if(iStr <= setNum) {
+                        int tInt = iStr - 1;
+                        iRPS[tInt] = Integer.parseInt(tStr[1]);
+                    }
+                }
+            }
+    Intent recordIntent = new Intent(getActivity(), RecordScene.class);
+    recordIntent.putExtra("set_n", setNum);
+    recordIntent.putExtra("eName", routine);
+    recordIntent.putExtra("reps_per_set", iRPS);        //ArrayList 통째로 던지기
+    
+    timerLauncher.launch(recordIntent);
+    }
+}
+
+//RecordScene.java
+private int[] repsPerSet;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_record_scene);
+    
+    Intent getRecordIntent = getIntent();                           //세트 수를 받아옴
+    setNum = getRecordIntent.getIntExtra("set_n", 0);
+    repsPerSet = new int[setNum];
+    repsPerSet = getRecordIntent.getIntArrayExtra("reps_per_set");  //ArrayList 통째로 받기
+    
+    numberEdit = new EditText[setNum];
+    for(int i = 0; i < setNum; i++) {
+        numberEdit[i] = new EditText(getApplication());
+        //임시저장값이 없으면 생략
+        if(repsPerSet[i] != 0)
+            numberEdit[i].setText(String.valueOf(repsPerSet[i]));   //위치에 해당하는 임시저장값 저장
+    }                                                               //(있으면 있는데로 없으면 없는데로)
+}
+```
+
+- 일반 Activity를 Dialog마냥 다른 Activity 위에 일정크기로 띄우고 그 위에 한번 더 또 다른 Activity를 띄울 수 있게 처리<br>
+(예시)
+``` xml
+<!--AndroidManifest.xml-->
+<activity
+    android:name=".B_Activity"
+    android:exported="false"
+    android:theme="@style/Theme.~.Dialog" />
+```
+``` java
+//A_Activity
+Intent aIntent = new Intent(getActivity(), B_Activity.class);               //가지고 갈 Intent를 만듬
+aIntent.putExtra("임의의 키이름", 임의의 값);
+
+bLauncher.launch(recordIntent);                                    //Intent를 가지고 B Activity로 이동
+
+//B_Activity 
+Intent getAIntent = getIntent();
+변수 = getRecordIntent.getIntExtra("가져올 키이름", 기본값);       //가지고 온 Intent를 가져옴
+
+Intent bIntent = new Intent();                                    //다시 가져갈 Intent 만듬
+setResult(RESULT_OK, bIntent);                                    //RESULT_OK란 신호와 Intent를 들고 A Activity로 이동 
+finish();
+
+//A Activity
+//onCreate 안에서 Launcher를 만들어야 띄운 Activity 위에 한번 더 Activity를 띄울 수 있음
+@Override
+public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View v = inflater.inflate(R.layout.fragment_timer_menu, container, false);
+    bLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Intent getTScenIntent = result.getData();
+        if(result.getResultCode() == Activity.RESULT_OK) {
+            RESULT_OK란 신호 일때 할 로직
+        }
+    }
+}
 ```
 
 ## 배운점
@@ -178,3 +343,4 @@ mCalendarView.addDecorator(new EventDecorator(colorAry[colorNum], Collections.si
 - Fragment 개념
 - List, Map을 이용한 데이터 관리
 - 동적뷰의 개념
+- strings.xml, color.xml, theme.xml의 사용법
