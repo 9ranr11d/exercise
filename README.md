@@ -53,7 +53,8 @@ exercise 0.1.2
 ### 탭 : [RecordMenu.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordMenu.java)
 - 기록 추가/수정/삭제 -> [CalendarScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/CalendarScene.java) ->
 [PopupActivity.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/PopupActivity.java)
-- 기록 엑셀로 내보내기 -> [DBManagePopup.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/DBManagePopup.java)
+- 기록 엑셀로 내보내기 -> [DBManagePopup.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/DBManagePopup.java) ->
+[DBListAdapter.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/DBListAdapter.java)
 - **날짜별로 운동부위 빈도 수 비교 후 색 지정**
 
 ### 탭 : [SettingScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/SettingScene.java)
@@ -318,6 +319,59 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle sa
             RESULT_OK란 신호 일때 할 로직
         }
     }
+}
+```
+
+- RecyclerView 전체 선택과, 체크 여부 기록을 위한 Map
+
+``` java
+//DBListAdapter.java
+private ArrayList<Exercise> localDataSet;
+private HashMap<Integer, String> checkedMap = new HashMap<>();  //해당 행의 체크 여부
+private HashMap<Integer, String> allListMap = new HashMap<>();  //모든 행의 기록
+//목록에 삽입할 데이터리스트
+public DBListAdapter(ArrayList<Exercise> dataSet) {
+    localDataSet = dataSet;
+    for(int i = 0; i < localDataSet.size(); i++) {
+        String[] localData = localDataSet.get(i).toString().split(":");
+        allListMap.put(i, localData[0]);    //('순서', 'seq')
+    }
+}
+    
+@Override
+public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    //checkedMap에 저장되어있는 체크유무를 판별(처음에는 체크돼있는게 없으니 모두 false)
+    //스크롤을 내리고 올리면 뷰를 재사용하는 메커니즘상 기존과는 다른게 체크됨
+    if(checkedMap.containsKey(position)) {  //해당되는 키가 있으면 true
+        holder.dbDataListCheck.setChecked(true);
+    }else {
+        holder.dbDataListCheck.setChecked(false);
+    }
+        
+    int tempPosition = position;
+    //체크시 checkedMap에 저장
+    holder.dbDataListCheck.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(holder.dbDataListCheck.isChecked()) {
+                checkedMap.put(tempPosition, tempText[0]);  //('위치', 'seq')
+            }else {
+                checkedMap.remove(tempPosition);            //해당 위치의 Map 데이터 삭제
+            }
+        }
+    });
+}
+    
+//전체선택
+public void setSelectAll(int mode) {
+    if(mode == 0) {
+        for(int i = 0; i < localDataSet.size(); i++) {
+            checkedMap.put(i, allListMap.get(i));       //('순서', 'seq')
+        }
+    }else {
+        checkedMap.clear();
+    }
+    notifyDataSetChanged();     //새로고침
 }
 ```
 
