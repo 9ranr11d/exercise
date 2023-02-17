@@ -12,15 +12,15 @@ public class DBHelper extends SQLiteOpenHelper {
     //SQLite 테이블 생성
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sqlExercise = "CREATE TABLE if not exists exercise ("
-                + "seq integer primary key,"
-                + "e_date text, e_type text, e_name text, set_n integer, e_volume text, e_Number text);";
+        String sqlExercise = "CREATE TABLE if not exists EXERCISE_TB ("
+                + "SEQ integer primary key,"
+                + "DATE text, TYPE text, NAME text, SET_NUM integer, VOLUME text, NUMBER text);";
         db.execSQL(sqlExercise);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sqlExercise = "DROP TABLE if exists exercise;";
+        String sqlExercise = "DROP TABLE if exists EXERCISE_TB;";
         db.execSQL(sqlExercise);
 
         onCreate(db);
@@ -30,15 +30,15 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put("seq", seq);
-        values.put("e_date", date);
-        values.put("e_type", type);
-        values.put("e_name", name);
-        values.put("set_n", String.valueOf(setNum));
-        values.put("e_volume", volume);
-        values.put("e_number",number);
+        values.put("SEQ", seq);
+        values.put("DATE", date);
+        values.put("TYPE", type);
+        values.put("NAME", name);
+        values.put("SET_NUM", setNum);
+        values.put("VOLUME", volume);
+        values.put("NUMBER",number);
 
-        long result = db.insertOrThrow("exercise", null, values);
+        long result = db.insertOrThrow("EXERCISE_TB", null, values);
         if(result == -1) {
             return false;
         }
@@ -51,14 +51,14 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put("e_date", date);
-        values.put("e_type", type);
-        values.put("e_name", name);
-        values.put("set_n", setNum);
-        values.put("e_volume", volume);
-        values.put("e_number", number);
+        values.put("DATE", date);
+        values.put("TYPE", type);
+        values.put("NAME", name);
+        values.put("SET_NUM", setNum);
+        values.put("VOLUME", volume);
+        values.put("NUMBER", number);
 
-        long result = db.update("exercise", values, "seq = ?", new String[] {seq});
+        long result = db.update("EXERCISE_TB", values, "SEQ = ?", new String[] {seq});
         if(result == -1) {
             return false;
         }
@@ -70,7 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean dataDelete(String seq) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        long result = db.delete("exercise", "seq = ?", new String[] {seq});
+        long result = db.delete("EXERCISE_TB", "SEQ = ?", new String[] {seq});
         if(result == -1) {
             return false;
         }

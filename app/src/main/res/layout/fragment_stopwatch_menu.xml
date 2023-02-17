@@ -23,7 +23,7 @@
             android:background="@drawable/button_background"
             android:layout_gravity="left"
             android:text="초기화"
-            android:id="@+id/sWResetBtn" />
+            android:id="@+id/stopwatchResetBtn" />
 
         <LinearLayout
             android:layout_width="350dp"
@@ -33,7 +33,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/minuteTex"
+                android:id="@+id/stopwatchMinTex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -48,7 +48,7 @@
                 android:textSize="70dp" />
 
             <TextView
-                android:id="@+id/secondTex"
+                android:id="@+id/stopwatchSecTex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -73,7 +73,7 @@
                 android:textSize="30dp" />
 
             <TextView
-                android:id="@+id/setTex"
+                android:id="@+id/stopwatchSetTex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -85,14 +85,14 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/setPlusBtn"
+                    android:id="@+id/stopwatchPlusBtn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/plus"
                     android:textAlignment="center" />
 
                 <Button
-                    android:id="@+id/setMinusBtn"
+                    android:id="@+id/stopwatchMinusBtn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/minus"
@@ -110,7 +110,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/timeStartBtn"
+                android:id="@+id/stopwatchStartBtn"
                 android:layout_width="150dp"
                 android:layout_height="70dp"
                 android:background="@drawable/button_background"
@@ -119,7 +119,7 @@
                 android:textSize="20dp" />
 
             <Button
-                android:id="@+id/timeStopBtn"
+                android:id="@+id/stopwatchStopBtn"
                 android:layout_width="150dp"
                 android:layout_height="70dp"
                 android:background="@drawable/button_background"

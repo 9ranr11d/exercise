@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/dataManagementBtn"
+            android:id="@+id/recordManagementBtn"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"

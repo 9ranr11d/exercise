@@ -6,31 +6,31 @@
     android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/dbDateListTex"
+        android:id="@+id/recyclerDateTex"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textSize="15dp" />
 
     <TextView
-        android:id="@+id/dbTypeListTex"
+        android:id="@+id/recyclerTypeTex"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:textSize="15dp" />
 
     <TextView
-        android:id="@+id/dbNameListTex"
+        android:id="@+id/recyclerNameTex"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:textSize="15dp" />
 
     <TextView
-        android:id="@+id/dbSetNListTex"
+        android:id="@+id/recyclerSetNumTex"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:textSize="15dp" />
 
     <TextView
-        android:id="@+id/dbVolumeListTex"
+        android:id="@+id/recyclerVolumeTex"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
@@ -38,7 +38,7 @@
         android:textSize="15dp" />
 
     <CheckBox
-        android:id="@+id/dbDataListCheck"
+        android:id="@+id/recyclerChk"
         android:layout_width="50dp"
         android:layout_height="wrap_content" />
 

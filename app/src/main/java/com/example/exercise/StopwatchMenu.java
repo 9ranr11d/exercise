@@ -20,32 +20,33 @@ import java.util.TimerTask;
 public class StopwatchMenu extends Fragment implements View.OnClickListener {
     private int setNum = 0, second = 0, minute = 0, sound = 0;
 
-    private TextView setTex, minuteTex, secondTex;
-    private Button setPlusBtn, setMinusBtn, timeStartBtn, timeStopBtn, sWResetBtn;
+    private TextView setTex, minTex, secTex;
+    private Button plusBtn, minusBtn, startBtn, stopBtn, resetBtn;
 
     private Timer timer;
     private TimerTask restTimerTask = null;
     private SoundPool soundPool;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_stopwatch_menu, container, false);
+        //텍스트뷰
+        setTex = v.findViewById(R.id.stopwatchSetTex);
+        minTex = v.findViewById(R.id.stopwatchMinTex);
+        secTex = v.findViewById(R.id.stopwatchSecTex);
+        //버튼
+        plusBtn = v.findViewById(R.id.stopwatchPlusBtn);
+        minusBtn = v.findViewById(R.id.stopwatchMinusBtn);
+        startBtn = v.findViewById(R.id.stopwatchStartBtn);
+        stopBtn = v.findViewById(R.id.stopwatchStopBtn);
+        resetBtn = v.findViewById(R.id.stopwatchResetBtn);
 
-        setTex = v.findViewById(R.id.setTex);
-        minuteTex = v.findViewById(R.id.minuteTex);
-        secondTex = v.findViewById(R.id.secondTex);
-
-        setPlusBtn = v.findViewById(R.id.setPlusBtn);
-        setMinusBtn = v.findViewById(R.id.setMinusBtn);
-        timeStartBtn = v.findViewById(R.id.timeStartBtn);
-        timeStopBtn = v.findViewById(R.id.timeStopBtn);
-        sWResetBtn = v.findViewById(R.id.sWResetBtn);
-        //버튼 클릭 리스너
-        setPlusBtn.setOnClickListener(this);
-        setMinusBtn.setOnClickListener(this);
-        timeStartBtn.setOnClickListener(this);
-        timeStopBtn.setOnClickListener(this);
-        sWResetBtn.setOnClickListener(this);
+        plusBtn.setOnClickListener(this);
+        minusBtn.setOnClickListener(this);
+        startBtn.setOnClickListener(this);
+        stopBtn.setOnClickListener(this);
+        resetBtn.setOnClickListener(this);
         //소리
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
@@ -57,7 +58,7 @@ public class StopwatchMenu extends Fragment implements View.OnClickListener {
 
         sound = soundPool.load(getActivity(), R.raw.one_second, 1);     //sound에 one_second라는 mp3파일 저장
         //정지 버튼 비활성화
-        timeStopBtn.setEnabled(false);
+        stopBtn.setEnabled(false);
 
         return v;
     }
@@ -65,14 +66,14 @@ public class StopwatchMenu extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.setPlusBtn:   //세트수 증가
+            case R.id.stopwatchPlusBtn:   //세트수 증가
                 setTex.setText(String.valueOf(++setNum));
                 break;
-            case R.id.setMinusBtn:  //세트수 감소
+            case R.id.stopwatchMinusBtn:  //세트수 감소
                 if(setNum > 0)
                     setTex.setText(String.valueOf(--setNum));
                 break;
-            case R.id.timeStartBtn: //타이머 시작
+            case R.id.stopwatchStartBtn: //타이머 시작
                 //타이머 초기값을 0으로 지정
                 second = 0;
                 minute = 0;
@@ -82,40 +83,40 @@ public class StopwatchMenu extends Fragment implements View.OnClickListener {
                     timer.schedule(restTimerTask, 0, 1000);
                 }
                 //정지 버튼 활성화, 시작 버튼 비활성화
-                timeStopBtn.setEnabled(true);
-                timeStartBtn.setEnabled(false);
+                stopBtn.setEnabled(true);
+                startBtn.setEnabled(false);
                 break;
-            case R.id.timeStopBtn:  //타이머 정지
+            case R.id.stopwatchStopBtn:  //타이머 정지
                 //타이머가 있을 때 타이머 정지 후 비우기
                 if(restTimerTask != null) {
                     restTimerTask.cancel();
                     restTimerTask = null;
                 }
                 //타이머 표기값을 0으로 지정
-                secondTex.setText("00");
-                minuteTex.setText("00");
+                secTex.setText("00");
+                minTex.setText("00");
                 //세트수 증가 및 표시
                 setNum += 1;
                 setTex.setText(String.valueOf(setNum));
                 //정지 버튼 비활성화, 시작 버튼 활성화
-                timeStopBtn.setEnabled(false);
-                timeStartBtn.setEnabled(true);
+                stopBtn.setEnabled(false);
+                startBtn.setEnabled(true);
                 break;
-            case R.id.sWResetBtn:   //초기화 버튼
+            case R.id.stopwatchResetBtn:   //초기화 버튼
                 //시작된 타이머 있다면 정지
                 if(restTimerTask != null) {
                     restTimerTask.cancel();
                     restTimerTask = null;
                 }
                 //타이머 표기값을 0으로 지정
-                secondTex.setText("00");
-                minuteTex.setText("00");
+                secTex.setText("00");
+                minTex.setText("00");
                 //세트수 초기화
                 setNum = 0;
                 setTex.setText(String.valueOf(setNum));
                 //정지 버튼 비활성화, 시작 버튼 활성화
-                timeStopBtn.setEnabled(false);
-                timeStartBtn.setEnabled(true);
+                stopBtn.setEnabled(false);
+                startBtn.setEnabled(true);
                 break;
         }
     }
@@ -129,23 +130,22 @@ public class StopwatchMenu extends Fragment implements View.OnClickListener {
                     @Override
                     public void run() {
                         soundPool.play(sound, 1, 1, 0, 0, 1);   //초마다 재생
-                        if(second < 59) {   //59초 미만일땐 1초 증가
+                        if(second < 59)    //59초 미만일땐 1초 증가
                             second++;
-                        }else {             //60초일때 1분 증가
+                        else {             //60초일때 1분 증가
                             second = 0;
                             minute++;
                         }
                         //초나 분이 10초 미만일때 빈자리를 0으로 채움
-                        if(second < 10) {
-                            secondTex.setText("0" + String.valueOf(second));
-                        }else {
-                            secondTex.setText(String.valueOf(second));
-                        }
-                        if(minute < 10) {
-                            minuteTex.setText("0" + String.valueOf(minute));
-                        }else {
-                            minuteTex.setText(String.valueOf(minute));
-                        }
+                        if(second < 10)
+                            secTex.setText("0" + second);
+                        else
+                            secTex.setText(String.valueOf(second));
+
+                        if(minute < 10)
+                            minTex.setText("0" + minute);
+                        else
+                            minTex.setText(String.valueOf(minute));
                     }
                 });
             }

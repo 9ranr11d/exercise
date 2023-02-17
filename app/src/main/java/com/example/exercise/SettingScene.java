@@ -25,11 +25,12 @@ public class SettingScene extends AppCompatActivity implements View.OnClickListe
     public final String nickname = "9_ranr11d";
     private int themeColor = 0;
 
-    private RadioGroup themeBtnGroup;
-    private RadioButton lightThemeBtn, darkThemeBtn, defaultThemeBtn;
-    private EditText timeDefaultEdit, maxSetEdit;
-    private Button timeDefaultBtn, settingCloseBtn, maxSetBtn;
+    private RadioGroup radioGroup;
+    private RadioButton lightThemeBtn, darkThemeBtn, defThemeBtn;
+    private EditText defTimeEdit, maxSetEdit;
+    private Button defTimeOkBtn, closeBtn, maxSetOkBtn;
     private TextView producedByTex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,50 +43,50 @@ public class SettingScene extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-//        int versionCode = packageInfo.versionCode;
-        String versionName = packageInfo.versionName;
-        //Ver.버전 prod.by 닉네임
-        StringBuilder prodStr = new StringBuilder();
-        prodStr.append("Ver.").append(versionName).append(" ").append("prod.by ").append(nickname);
-        //TextView
+        //텍스트뷰
         producedByTex = findViewById(R.id.producedByTex);
 
-        producedByTex.setText(prodStr.toString());
-        //EditText
-        timeDefaultEdit = findViewById(R.id.timeDefaultEdit);
-        maxSetEdit = findViewById(R.id.maxSetEdit);
+        String verName = packageInfo.versionName;
+        //Ver.버전 prod.by 닉네임
+        StringBuilder prodStr = new StringBuilder();
+        prodStr.append("Ver.").append(verName).append(" ").append("prod.by ").append(nickname);
 
-        timeDefaultEdit.setText(String.valueOf(MainActivity.timeDefault));      //쉬는 시간 기본값
+        producedByTex.setText(prodStr.toString());
+        //에딧텍스트뷰
+        defTimeEdit = findViewById(R.id.settingDefTimeEdit);
+        maxSetEdit = findViewById(R.id.settingMaxSetEdit);
+
+        defTimeEdit.setText(String.valueOf(MainActivity.defTime));      //쉬는 시간 기본값
         maxSetEdit.setText(String.valueOf(MainActivity.maxSet));                //최대 세트 수
-        //ridio
-        themeBtnGroup = findViewById(R.id.themeBtnGroup);
-        //Btn
-        lightThemeBtn = findViewById(R.id.lightThemeBtn);
-        darkThemeBtn = findViewById(R.id.darkThemeBtn);
-        defaultThemeBtn = findViewById(R.id.defaultThemeBtn);
-        timeDefaultBtn = findViewById(R.id.timeDefaultBtn);
-        settingCloseBtn = findViewById(R.id.settingCloseBtn);
-        maxSetBtn = findViewById(R.id.maxSetBtn);
+        //라디오그룹
+        radioGroup = findViewById(R.id.settingThemeGroup);
+        //버튼
+        lightThemeBtn = findViewById(R.id.settingLightThemeBtn);
+        darkThemeBtn = findViewById(R.id.settingDarkThemeBtn);
+        defThemeBtn = findViewById(R.id.settingDefThemeBtn);
+        defTimeOkBtn = findViewById(R.id.settingDefTimeBtn);
+        closeBtn = findViewById(R.id.settingCloseBtn);
+        maxSetOkBtn = findViewById(R.id.settingMaxSetBtn);
 
         lightThemeBtn.setOnClickListener(this);
         darkThemeBtn.setOnClickListener(this);
-        defaultThemeBtn.setOnClickListener(this);
-        timeDefaultBtn.setOnClickListener(this);
-        settingCloseBtn.setOnClickListener(this);
-        maxSetBtn.setOnClickListener(this);
+        defThemeBtn.setOnClickListener(this);
+        defTimeOkBtn.setOnClickListener(this);
+        closeBtn.setOnClickListener(this);
+        maxSetOkBtn.setOnClickListener(this);
         //현재 선택된 테마
         themeColor = AppCompatDelegate.getDefaultNightMode();
-        Log.d(TAG, "theme color = " + themeColor);
+        Log.i(TAG, "theme color = " + themeColor);
         //-1 : Default, 1 : Light, 2 : Dark
-        switch (MainActivity.themeNum) {
+        switch (MainActivity.themeMode) {
             case -1:
-                themeBtnGroup.check(R.id.defaultThemeBtn);
+                radioGroup.check(R.id.settingDefThemeBtn);
                 break;
             case 1:
-                themeBtnGroup.check(R.id.lightThemeBtn);
+                radioGroup.check(R.id.settingLightThemeBtn);
                 break;
             case 2:
-                themeBtnGroup.check(R.id.darkThemeBtn);
+                radioGroup.check(R.id.settingDarkThemeBtn);
                 break;
         }
     }
@@ -93,34 +94,34 @@ public class SettingScene extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.lightThemeBtn:        //밝은 테마
-                MainActivity.themeNum = 1;
+            case R.id.settingLightThemeBtn:        //밝은 테마
+                MainActivity.themeMode = 1;
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 break;
-            case R.id.darkThemeBtn:         //어두운 테마
-                MainActivity.themeNum = 2;
+            case R.id.settingDarkThemeBtn:         //어두운 테마
+                MainActivity.themeMode = 2;
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 break;
-            case R.id.defaultThemeBtn:      //폰 기본 테마
-                MainActivity.themeNum = -1;
+            case R.id.settingDefThemeBtn:          //폰 기본 테마
+                MainActivity.themeMode = -1;
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 else
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
                 break;
-            case R.id.timeDefaultBtn:       //쉬는 시간 기본값 저장
-                showRestartDialog(timeDefaultEdit.getText().toString(), "timeDefault");
+            case R.id.settingDefTimeBtn:           //쉬는 시간 기본값 저장
+                showRestartDialog(Integer.parseInt(defTimeEdit.getText().toString()), "DEFAULT_TIME");
                 break;
-            case R.id.maxSetBtn:            //최대 세트 수 저장
-                showRestartDialog(maxSetEdit.getText().toString(), "maxSet");
+            case R.id.settingMaxSetBtn:            //최대 세트 수 저장
+                showRestartDialog(Integer.parseInt(maxSetEdit.getText().toString()), "MAX_SET");
                 break;
-            case R.id.settingCloseBtn :     //닫기
+            case R.id.settingCloseBtn:             //닫기
                 finish();
                 break;
         }
     }
     //앱 재실행
-    private void showRestartDialog(String editStr, String valueName) {
+    private void showRestartDialog(int editStr, String varName) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("주의");
         dialog.setMessage("확인을 누르면 앱 재시작됍니다.");
@@ -128,11 +129,10 @@ public class SettingScene extends AppCompatActivity implements View.OnClickListe
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                int tempTDV = Integer.parseInt(editStr);
-                SharedPreferences sf = getSharedPreferences(MainActivity.sfFileName, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sf.edit();
-                editor.putInt(valueName, tempTDV);
-                Log.d(TAG, "out " + valueName + " = " + tempTDV);
+                Log.i(TAG, "out " + varName + " = " + editStr);
+                SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.fileName, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(varName, editStr);
                 editor.commit();        //SharedPreference 값 저장
 
                 PackageManager packageManager = getPackageManager();

@@ -3,18 +3,18 @@ package com.example.exercise;
 import androidx.annotation.NonNull;
 //운동기록 객체
 public class Exercise implements Comparable<Exercise> {
-    private int seq, setN;                                  //seq
-    private String eDate, eType, eName, eVolume, eNumber;   //날짜, 운동 부위, 운동 이름, 무게
+    private int seq, setNum;                                  //seq
+    private String date, type, name, volume, number;   //날짜, 운동 부위, 운동 이름, 무게
     private final String division = ":";                    //구분점
 
-    Exercise(int seq, String eDate, String eType, String eName, int setN, String eVolume, String eNumber) {
+    Exercise(int seq, String date, String type, String name, int setNum, String volume, String number) {
         this.seq = seq;
-        this.eDate = eDate;
-        this.eType = eType;
-        this.eName = eName;
-        this.setN = setN;
-        this.eVolume = eVolume;
-        this.eNumber = eNumber;
+        this.date = date;
+        this.type = type;
+        this.name = name;
+        this.setNum = setNum;
+        this.volume = volume;
+        this.number = number;
     }
 
     public int getSeq() {
@@ -25,52 +25,52 @@ public class Exercise implements Comparable<Exercise> {
         this.seq = seq;
     }
 
-    public String geteDate() {
-        return eDate;
+    public String getDate() {
+        return date;
     }
 
-    public void seteDate(String eDate) {
-        this.eDate = eDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String geteType() {
-        return eType;
+    public String getType() {
+        return type;
     }
 
-    public void seteType(String eType) {
-        this.eType = eType;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String geteName() {
-        return eName;
+    public String getName() {
+        return name;
     }
 
-    public void seteName(String eName) {
-        this.eName = eName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getSetN() {
-        return setN;
+    public int getSetNum() {
+        return setNum;
     }
 
-    public void setSetN(int setN) {
-        this.setN = setN;
+    public void setSetNum(int setNum) {
+        this.setNum = setNum;
     }
 
-    public String geteVolume() {
-        return eVolume;
+    public String getVolume() {
+        return volume;
     }
 
-    public void seteVolume(String eVolume) {
-        this.eVolume = eVolume;
+    public void setVolume(String volume) {
+        this.volume = volume;
     }
 
-    public String geteNumber() {
-        return eNumber;
+    public String getNumber() {
+        return number;
     }
 
-    public void seteNumber(String eNumber) {
-        this.eNumber = eNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     @NonNull
@@ -78,12 +78,12 @@ public class Exercise implements Comparable<Exercise> {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append(seq).append(division)
-                .append(eDate).append(division)
-                .append(eType).append(division)
-                .append(eName).append(division)
-                .append(setN).append(division)
-                .append(eVolume).append(division)
-                .append(eNumber);
+                .append(date).append(division)
+                .append(type).append(division)
+                .append(name).append(division)
+                .append(setNum).append(division)
+                .append(volume).append(division)
+                .append(number);
 
         return result.toString();
     }
@@ -91,6 +91,6 @@ public class Exercise implements Comparable<Exercise> {
     //날짜를 기준으로 비교
     @Override
     public int compareTo(Exercise exercise) {
-        return this.eDate.compareTo(exercise.eDate);
+        return this.date.compareTo(exercise.date);
     }
 }

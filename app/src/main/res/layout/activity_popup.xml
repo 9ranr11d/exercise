@@ -31,7 +31,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown"
-            android:id="@+id/pTypeSpi" />
+            android:id="@+id/popupTypeSpi" />
 
     </LinearLayout>
 
@@ -51,13 +51,13 @@
         <EditText
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:id="@+id/eNameTex" />
+            android:id="@+id/popupNameTex" />
 
         <Button
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/delete"
-            android:id="@+id/eNameDelBtn" />
+            android:id="@+id/popupNameDelBtn" />
 
     </LinearLayout>
 
@@ -77,16 +77,16 @@
         <TextView
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:id="@+id/eSetTex" />
+            android:id="@+id/popupSetTex" />
 
         <Button
-            android:id="@+id/popPBtn"
+            android:id="@+id/popupPlusBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/plus2" />
 
         <Button
-            android:id="@+id/popMBtn"
+            android:id="@+id/popupMinusBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/minus2" />
@@ -111,7 +111,7 @@
             android:layout_height="100dp" >
 
             <GridLayout
-                android:id="@+id/popVolnNumGridLay"
+                android:id="@+id/popupGridLay"
                 android:layout_width="200dp"
                 android:layout_height="100dp"
                 android:columnCount="3"
@@ -135,7 +135,7 @@
             android:layout_height="40dp"
             android:background="@drawable/button_background"
             android:layout_margin="3dp"
-            android:id="@+id/okBtn"
+            android:id="@+id/popupOkBtn"
             android:text="수정"
             android:textSize="15dp" />
 
@@ -144,7 +144,7 @@
             android:layout_height="40dp"
             android:background="@drawable/button_background"
             android:layout_margin="3dp"
-            android:id="@+id/insertBtn"
+            android:id="@+id/popupInsBtn"
             android:text="추가"
             android:textSize="15dp" />
 
@@ -153,7 +153,7 @@
             android:layout_height="40dp"
             android:background="@drawable/button_background"
             android:layout_margin="3dp"
-            android:id="@+id/deleteBtn"
+            android:id="@+id/popupDelBtn"
             android:text="삭제"
             android:textSize="15dp" />
 
@@ -162,7 +162,7 @@
             android:layout_height="40dp"
             android:background="@drawable/button_background"
             android:layout_margin="3dp"
-            android:id="@+id/cancelBtn"
+            android:id="@+id/popupCancelBtn"
             android:text="취소"
             android:textSize="15dp" />
 

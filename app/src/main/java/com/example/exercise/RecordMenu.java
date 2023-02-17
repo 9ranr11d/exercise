@@ -30,35 +30,39 @@ import java.util.HashSet;
 //기록 메뉴
 public class RecordMenu extends Fragment implements View.OnClickListener {
     private static final String TAG = "RecordMenu";
-    private String sTempDate = "";
+    private String date = "";
     private String tenFormatDate = "";
-    private int selectYear = 0, selectMonth = 0, selectDay = 0, selectDateColor = 0, todayColor = 0;
+    private int selectedYear = 0, selectedMonth = 0, selectedDay = 0, selectedDateColor = 0, todayColor = 0;
 
     private Button dataManagementBtn;
+    private MaterialCalendarView materialCalendarView;
 
-    private MaterialCalendarView mCalendarView;
-    private CalendarDay selectedDay;
+    private CalendarDay selectedCalendar;
     private ActivityResultLauncher<Intent> launcher;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_record_menu, container, false);
 
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            updateLay();
+            updateLay();    //새로고침
         });
         //색상
-        selectDateColor = ContextCompat.getColor(getContext(), R.color.white);  //오늘날짜
+        selectedDateColor = ContextCompat.getColor(getContext(), R.color.white);  //오늘날짜
         todayColor = ContextCompat.getColor(getContext(), R.color.lightColor);
+
+        Log.i(TAG, "selected date color = " + Integer.toHexString(selectedDateColor));
+        Log.i(TAG, "today color = " + Integer.toHexString(todayColor));
         //버튼
-        dataManagementBtn = v.findViewById(R.id.dataManagementBtn);
+        dataManagementBtn = v.findViewById(R.id.recordManagementBtn);
 
         dataManagementBtn.setOnClickListener(this);
         //캘런더뷰
-        mCalendarView = v.findViewById(R.id.mCalendarView);
+        materialCalendarView = v.findViewById(R.id.mCalendarView);
 
-        mCalendarView.setTitleFormatter(new MonthArrayTitleFormatter(getResources().getTextArray(R.array.months))); //요일 한글로
-        mCalendarView.setTitleFormatter(new TitleFormatter() {  //년도, 월 표시형식 변환 ex)2022 07
+        materialCalendarView.setTitleFormatter(new MonthArrayTitleFormatter(getResources().getTextArray(R.array.months))); //요일 한글로
+        materialCalendarView.setTitleFormatter(new TitleFormatter() {  //년도, 월 표시형식 변환 ex)2022 07
             @Override
             public CharSequence format(CalendarDay day) {
                 LocalDate inputText = day.getDate();
@@ -69,17 +73,17 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
                 return calendarHeaderBuilder.toString();
             }
         });
-        mCalendarView.setWeekDayFormatter(new ArrayWeekDayFormatter(getResources().getTextArray(R.array.weekdays))); //요일 한글로
-        selectedDay = CalendarDay.today();  //오늘 날짜 초기값
-        mCalendarView.setSelectedDate(CalendarDay.today()); //오늘 날짜를 선택
+        materialCalendarView.setWeekDayFormatter(new ArrayWeekDayFormatter(getResources().getTextArray(R.array.weekdays))); //요일 한글로
+        selectedCalendar = CalendarDay.today();  //오늘 날짜 초기값
+        materialCalendarView.setSelectedDate(CalendarDay.today()); //오늘 날짜를 선택
 
-        sTempDate = selectedDay.toString().replace("CalendarDay{","").replace("}", "");
+        date = selectedCalendar.toString().replace("CalendarDay{","").replace("}", "");
         //오늘 날짜를 년, 월, 일로 나누어 초기값을 지정
-        String[] splitTemp = sTempDate.split("-");
-        selectYear = Integer.parseInt(splitTemp[0]);
-        selectMonth = Integer.parseInt(splitTemp[1]);
-        selectDay = Integer.parseInt(splitTemp[2]);
-        tenFormatDate = setDateFormat(selectYear, selectMonth, selectDay);
+        String[] splitTemp = date.split("-");
+        selectedYear = Integer.parseInt(splitTemp[0]);
+        selectedMonth = Integer.parseInt(splitTemp[1]);
+        selectedDay = Integer.parseInt(splitTemp[2]);
+        tenFormatDate = setDateFormat(selectedYear, selectedMonth, selectedDay);
 
         updateLay();
 
@@ -89,78 +93,79 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
     private void updateLay() {
         setSpan();
         //날짜 선택 리스너
-        mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                selectedDay = date;
+                selectedCalendar = date;
                 setSpan();
-                sTempDate = date.toString().replace("CalendarDay{","").replace("}", "");
-                String[] mTempDateArray = sTempDate.split("-");
+                RecordMenu.this.date = date.toString().replace("CalendarDay{","").replace("}", "");
+                String[] mTempDateArray = RecordMenu.this.date.split("-");
                 //선택된 날을 년, 월, 일로 나누어 선택된 날에 삽입
-                selectYear = Integer.parseInt(mTempDateArray[0]);
-                selectMonth = Integer.parseInt(mTempDateArray[1]);
-                selectDay = Integer.parseInt(mTempDateArray[2]);
+                selectedYear = Integer.parseInt(mTempDateArray[0]);
+                selectedMonth = Integer.parseInt(mTempDateArray[1]);
+                selectedDay = Integer.parseInt(mTempDateArray[2]);
 
-                tenFormatDate = setDateFormat(selectYear, selectMonth, selectDay);
-                Log.d(TAG, "select day = " + tenFormatDate);
-                Intent sendCalIntent = new Intent(getActivity(), CalendarScene.class);
-                sendCalIntent.putExtra("selectDay", tenFormatDate);
+                tenFormatDate = setDateFormat(selectedYear, selectedMonth, selectedDay);
 
-                launcher.launch(sendCalIntent);
+                Log.i(TAG, "selected day = " + tenFormatDate);
+                Intent toCalendarIntent = new Intent(getActivity(), CalendarScene.class);
+                toCalendarIntent.putExtra("SELECTED_DATE", tenFormatDate);
+
+                launcher.launch(toCalendarIntent);
             }
         });
     }
     //받은 년, 월, 일을 빈자리를 0으로 채워 하나로 만듦
-    private String setDateFormat(int fYear, int fMonth, int fDay) {
-        String str = "", tempMstr = "", tempDstr = "";
+    private String setDateFormat(int year, int month, int day) {
+        String result = "", tempMonth = "", tempDay = "";
 
-        tempMstr = tenNumFormat(fMonth);
-        tempDstr = tenNumFormat(fDay);
+        tempMonth = tenNumFormat(month);
+        tempDay = tenNumFormat(day);
 
-        str = fYear + "-" + tempMstr + "-" + tempDstr;
+        result = year + "-" + tempMonth + "-" + tempDay;
 
-        return str;
+        return result;
     }
 
-    private String tenNumFormat(int target) {
+    private String tenNumFormat(int number) {
         String result = "";
 
-        if(target < 10)
-            result = "0" + target;
+        if(number < 10)
+            result = "0" + number;
         else
-            result = String.valueOf(target);
+            result = String.valueOf(number);
 
         return result;
     }
     //점, 오늘날짜 글자색, 선택한 날짜색
     private void setSpan() {
-        mCalendarView.removeDecorators();   //모든 Decorator 삭제
+        materialCalendarView.removeDecorators();   //모든 Decorator 삭제
         //오늘 날짜 글자색
-        mCalendarView.addDecorator(new EventDecorator(todayColor,
+        materialCalendarView.addDecorator(new EventDecorator(todayColor,
                     Collections.singleton(CalendarDay.today()), 2));
         //선택한 날짜 글자색
-        mCalendarView.addDecorator(new EventDecorator(selectDateColor,
-                Collections.singleton(selectedDay), 2));
+        materialCalendarView.addDecorator(new EventDecorator(selectedDateColor,
+                Collections.singleton(selectedCalendar), 2));
         //Strings.xml로 부터 색상과 부위 배열을 가져옴
-        String[] typeAry = getResources().getStringArray(R.array.exerciseType);
-        int[] colorAry = getResources().getIntArray(R.array.exerTypeColor);
+        String[] typeStrAry = getResources().getStringArray(R.array.exerciseType);
+        int[] colorIntAry = getResources().getIntArray(R.array.exerTypeColor);
         //distDate set에 중복 없게 날짜를 저장, dateType에는 날짜랑 부위를 짝지어서 저장
-        HashSet<String> distDate = new HashSet<>();
-        ArrayList<String> dateType = new ArrayList<>();
-        for(Exercise exer : MainActivity.exerciseDAO.eList) {
-            distDate.add(exer.geteDate());
-            dateType.add(exer.geteDate() + ":" + exer.geteType());
+        HashSet<String> distinctDateSet = new HashSet<>();
+        ArrayList<String> dateNTypeList = new ArrayList<>();
+        for(Exercise exercise : MainActivity.exerciseDAO.exerList) {
+            distinctDateSet.add(exercise.getDate());                          //모든 기록의 날짜를 중복없이 나열
+            dateNTypeList.add(exercise.getDate() + ":" + exercise.getType());  //모든 기록을 ('날짜':'운동부위')쌍으로 나열
         }
         //날짜별로 부위의 빈도수를 구하여 높은 부위별로 색상을 다르게 함
-        for(String date : distDate) {
+        for(String date : distinctDateSet) {
             ArrayList<Integer> typeList = new ArrayList<>();
-            for(int i = 0; i < typeAry.length; i++) {
-                typeList.add(Collections.frequency(dateType, date + ":" + typeAry[i]));     //부위별 빈도수를 typeList에 저장
-            }
-            Log.d(TAG, date + " type frequency = " + typeList);
-            int colorNum = typeList.indexOf(Collections.max(typeList));                           //typeList의 최빈수의 위치를 저장
+            for(int i = 0; i < typeStrAry.length; i++)
+                typeList.add(Collections.frequency(dateNTypeList, date + ":" + typeStrAry[i]));     //부위별 빈도수를 typeList에 저장
 
-            Log.d(TAG, date + " color = " + Integer.toHexString(colorAry[colorNum]));
+            int colorNum = typeList.indexOf(Collections.max(typeList));                        //typeList의 최빈수의 위치를 저장
+
+            Log.i(TAG, date + " type frequency = " + typeList);
+            Log.i(TAG, date + " color = " + Integer.toHexString(colorIntAry[colorNum]));
 
             String[] markingDate = date.split("-");
 
@@ -168,7 +173,7 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
             int markingMonth = Integer.parseInt(markingDate[1]);
             int markingDay = Integer.parseInt(markingDate[2]);
 
-            mCalendarView.addDecorator(new EventDecorator(colorAry[colorNum],
+            materialCalendarView.addDecorator(new EventDecorator(colorIntAry[colorNum],
                     Collections.singleton(CalendarDay.from(markingYear, markingMonth, markingDay)), 1));
         }
     }
@@ -176,10 +181,10 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
-            case R.id.dataManagementBtn:            //기록 관리 팝업으로
-                Intent dataManagementIntent = new Intent(getActivity(), DBManagePopup.class);
+            case R.id.recordManagementBtn:            //기록 관리 팝업으로
+                Intent intent = new Intent(getActivity(), DBManagePopup.class);
 
-                launcher.launch(dataManagementIntent);
+                launcher.launch(intent);
                 break;
         }
     }
@@ -187,7 +192,7 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         //프레그먼트 변환시 캘린더 초기화를 위해
-        mCalendarView.clearSelection();
-        mCalendarView.setSelectedDate(CalendarDay.today());
+        materialCalendarView.clearSelection();
+        materialCalendarView.setSelectedDate(CalendarDay.today());
     }
 }

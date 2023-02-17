@@ -21,97 +21,106 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 //타이머 메뉴
 public class TimerMenu extends Fragment implements View.OnClickListener {
     private final String TAG = "TimerMenu";
-    private int timeMNum = 1, timeSNum = 0, setNum = 0, routine = 0;
+    private int minute = 0, second = 0, setNum = 0, routine = 0;
+    private boolean isVisitFlag = true;
     private long now;
     private Date nowDate;
-    private StringBuilder repsPerSet = new StringBuilder();
-
-    private TextView setTex;
-    private NumberPicker minuteNumPick, secondNumPick;
-    private Button setPlusBtn, setMinusBtn, timeStartBtn, dbSaveBtn, tResetBtn;
+    private StringBuilder rpsBuilder = new StringBuilder();
 
     private final SimpleDateFormat nowFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private ActivityResultLauncher<Intent> timerLauncher;
+    private TextView setTex;
+    private NumberPicker minPick, secPick;
+    private Button plusBtn, minusBtn, startBtn, saveBtn, resetBtn;
+
+    private ActivityResultLauncher<Intent> launcher;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_timer_menu, container, false);
 
-        timerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            Intent getTScenIntent = result.getData();
-            if(result.getResultCode() == Activity.RESULT_OK) {
-                setNum = getTScenIntent.getIntExtra("set_n", 0);        //TimerScen으로 부터 세트 수 받아옴
-                Log.d(TAG, "set num = " + setNum);
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            Intent launcherIntent = result.getData();
+            if(result.getResultCode() == Activity.RESULT_OK) {      //쉬는 시간 끝
+                setNum = launcherIntent.getIntExtra("SET_NUM", 0);        //TimerScen으로 부터 세트 수 받아옴
                 setSetNum(setNum);
                 //세트별 횟수 임시저장값
-                String tGRPS = getTScenIntent.getStringExtra("reps_per_set");
-                if(!tGRPS.equals("")) {
-                    int tRPS = Integer.parseInt(getTScenIntent.getStringExtra("reps_per_set"));
-                    Log.d(TAG, "reps per set = " + tRPS);
-                    repsPerSet.append(setNum).append(":").append(tRPS).append(",");
-                }
-            }
-            else if(result.getResultCode() == Activity.RESULT_CANCELED) {
-                makeToast("취소되었습니다.");
-            }else if(result.getResultCode() == 2) {
-                setNum = getTScenIntent.getIntExtra("set_n", setNum);
-                String timerVol = getTScenIntent.getStringExtra("volume");         //TimerScen에서 RecordScen으로 받아온 것을 받아옴
-                String timerNum = getTScenIntent.getStringExtra("number");
-                String timerType = getTScenIntent.getStringExtra("type");
-                String timerName = getTScenIntent.getStringExtra("name");
-                //저장
-                tInsertSeq(getTime(), timerType, timerName, timerVol, timerNum);
+                String recdRPS = launcherIntent.getStringExtra("REPS_PER_SET");
+                rpsBuilder.append(setNum).append(":");
 
-                repsPerSet = new StringBuilder();
+                if(recdRPS.equals(""))
+                    rpsBuilder.append("0");
+                else {
+                    int strToIntRPS = Integer.parseInt(recdRPS);
+                    Log.i(TAG, "receive RPS from TimerScene = " + strToIntRPS);
+                    rpsBuilder.append(strToIntRPS);
+                }
+
+                rpsBuilder.append(",");
+            }
+            else if(result.getResultCode() == Activity.RESULT_CANCELED)
+                makeToast("취소되었습니다.");
+            else if(result.getResultCode() == 2) {                 //기록 예약
+                setNum = launcherIntent.getIntExtra("SET_NUM", setNum);
+                String timerVol = launcherIntent.getStringExtra("VOLUME");         //TimerScen에서 RecordScen으로 받아온 것을 받아옴
+                String timerNum = launcherIntent.getStringExtra("NUMBER");
+                String timerType = launcherIntent.getStringExtra("TYPE");
+                String timerName = launcherIntent.getStringExtra("NAME");
+                //저장
+                insertSeq(getTime(), timerType, timerName, timerVol, timerNum);
+
+                rpsBuilder = new StringBuilder();
                 routine++;
             }
         });
-        //textView
-        setTex = v.findViewById(R.id.setTex);
-        //NumberPicker
-        minuteNumPick = v.findViewById(R.id.minuteNumPick);
-        secondNumPick = v.findViewById(R.id.secondNumPick);
+        //텍스트뷰
+        setTex = v.findViewById(R.id.timerSetTex);
+        //넘버픽커
+        minPick = v.findViewById(R.id.timerMinPick);
+        secPick = v.findViewById(R.id.timerSecPick);
 
-        minuteNumPick.setMaxValue(60);
-        minuteNumPick.setMinValue(0);
-        secondNumPick.setMaxValue(59);
-        secondNumPick.setMinValue(0);
+        minPick.setMaxValue(60);
+        minPick.setMinValue(0);
+        secPick.setMaxValue(59);
+        secPick.setMinValue(0);
+        //버튼
+        plusBtn = v.findViewById(R.id.timerPlusBtn);
+        minusBtn = v.findViewById(R.id.timerMinusBtn);
+        startBtn = v.findViewById(R.id.timerStartBtn);
+        resetBtn = v.findViewById(R.id.timerResetBtn);
+        saveBtn = v.findViewById(R.id.timerSaveBtn);
 
-        minuteNumPick.setValue(1);
-        //Btn
-        setPlusBtn = v.findViewById(R.id.setPlusBtn);
-        setMinusBtn = v.findViewById(R.id.setMinusBtn);
-        timeStartBtn = v.findViewById(R.id.timeStartBtn);
-        tResetBtn = v.findViewById(R.id.tResetBtn);
-        dbSaveBtn = v.findViewById(R.id.dbSaveBtn);
+        plusBtn.setOnClickListener(this);
+        minusBtn.setOnClickListener(this);
+        startBtn.setOnClickListener(this);
+        resetBtn.setOnClickListener(this);
+        saveBtn.setOnClickListener(this);
+        //다른 프레그먼트로 넘어 갔다 오더라도 세트 개수, 쉬는시간 유지
+        setNum = MainActivity.setNum;
+        minute = MainActivity.defTime / 60;
+        second = MainActivity.defTime % 60;
 
-        setPlusBtn.setOnClickListener(this);
-        setMinusBtn.setOnClickListener(this);
-        timeStartBtn.setOnClickListener(this);
-        tResetBtn.setOnClickListener(this);
-        dbSaveBtn.setOnClickListener(this);
-        //세이브 데이터 받음
-        timeSNum = this.getArguments().getInt("timeSNum");
-        timeMNum = this.getArguments().getInt("timeMNum");
-        setNum = this.getArguments().getInt("setNum");
-        routine = this.getArguments().getInt("routine");
+        if(isVisitFlag) {
+            isVisitFlag = false;      //처음에만 데이터를 받기 위해
+            //세이브 데이터 받음
+            minute = this.getArguments().getInt("MINUTE");
+            second = this.getArguments().getInt("SECOND");
+            setNum = this.getArguments().getInt("SET_NUM");
+            routine = this.getArguments().getInt("ROUTINE");
+            String tempStrRPS = this.getArguments().getString("REPS_PER_SET");
+            if(!(tempStrRPS == null))
+                rpsBuilder.append(tempStrRPS);
+            Log.i(TAG, "receive RPS from MainActivity = " + rpsBuilder.toString());
+        }
 
-        String tRPSS = this.getArguments().getString("repsPerSet");
-        if(!(tRPSS == null))
-            repsPerSet.append(tRPSS);
-        Log.i(TAG, "rps = " + repsPerSet.toString());
-        //다른 프레그먼트로 넘어 갔다 오더라도 세트 개수 유지
-        if(setNum == 0)
-            setNum = MainActivity.setNum;
         //세이브 데이터 적용
-        minuteNumPick.setValue(timeMNum);
-        secondNumPick.setValue(timeSNum);
+        minPick.setValue(minute);
+        secPick.setValue(second);
         setSetNum(setNum);
 
         return v;
@@ -120,65 +129,63 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.setPlusBtn:   //세트수 증가
+            case R.id.timerPlusBtn:   //세트수 증가
                 if(setNum < maxSet)
                     setTex.setText(String.valueOf(++setNum));
                 break;
-            case R.id.setMinusBtn:  //세트수 감소
-                if(setNum > 0)      //세트수가 0 이상일 때만 감소
+            case R.id.timerMinusBtn:  //세트수 감소
+                if(setNum > 0)        //세트수가 0 이상일 때만 감소
                     setTex.setText(String.valueOf(--setNum));
                 break;
-            case R.id.timeStartBtn: //타이머 시작
-                Intent timerIntent = new Intent(getActivity(), TimerScene.class);
-                timerIntent.putExtra("minute", minuteNumPick.getValue());
-                timerIntent.putExtra("second", secondNumPick.getValue());
-                timerIntent.putExtra("set_n", setNum);
-                timerIntent.putExtra("routine", routine);
-                timerIntent.putExtra("reps_per_set", repsPerSet.toString());
+            case R.id.timerStartBtn: //타이머 시작
+                Intent toSTimerIntent = new Intent(getActivity(), TimerScene.class);
+                toSTimerIntent.putExtra("MINUTE", minPick.getValue());
+                toSTimerIntent.putExtra("SECOND", secPick.getValue());
+                toSTimerIntent.putExtra("SET_NUM", setNum);
+                toSTimerIntent.putExtra("ROUTINE", routine);
+                toSTimerIntent.putExtra("REPS_PER_SET", rpsBuilder.toString());
 
-                timerLauncher.launch(timerIntent);
+                launcher.launch(toSTimerIntent);
                 break;
-            case R.id.dbSaveBtn:    //기록
-                if(setNum != 0) {   //세트수가 없으면 기록 되지 않음
-                    int[] iRPS = new int[setNum];
+            case R.id.timerSaveBtn:     //기록
+                if(setNum != 0) {       //세트수가 없으면 기록 되지 않음
+                    int[] rpsIntAry = new int[setNum];
                     //저장된 임시저장값이 있을 때만 실행
-                    if(!repsPerSet.toString().isEmpty()) {
-                        String[] tRPS = repsPerSet.toString().split(",");
+                    if(!rpsBuilder.toString().isEmpty()) {
+                        String[] rpsStrAry = rpsBuilder.toString().split(",");
                         //세트별 횟수 임시저장값을 배열의 맞는 위치에 대입
-                        for (String str : tRPS) {
-                            String[] tStr = str.split(":");
-                            int iStr = Integer.parseInt(tStr[0]);
+                        for (String str : rpsStrAry) {
+                            String[] onceSetNNum = str.split(":");
+                            int onceSet = Integer.parseInt(onceSetNNum[0]);
                             //임시저장된 값의 크기와 세트 수가 맞지 않을 때를 방지
-                            if(iStr <= setNum) {
-                                int tInt = iStr - 1;
-                                iRPS[tInt] = Integer.parseInt(tStr[1]);
+                            if(onceSet <= setNum) {
+                                int tempInt = onceSet - 1;
+                                rpsIntAry[tempInt] = Integer.parseInt(onceSetNNum[1]);
                             }
                         }
-                        Log.d(TAG, "reps per set = " + Arrays.toString(iRPS));
                     }
 
-                    Intent recordIntent = new Intent(getActivity(), RecordScene.class);
-                    recordIntent.putExtra("set_n", setNum);
-                    recordIntent.putExtra("eName", routine);
-                    recordIntent.putExtra("reps_per_set", iRPS);
+                    Intent toSRecordIntent = new Intent(getActivity(), RecordScene.class);
+                    toSRecordIntent.putExtra("SET_NUM", setNum);
+                    toSRecordIntent.putExtra("NAME", routine);
+                    toSRecordIntent.putExtra("REPS_PER_SET", rpsIntAry);
 
-
-                    timerLauncher.launch(recordIntent);
-                }else {
+                    launcher.launch(toSRecordIntent);
+                }else
                     makeToast("세트 수가 없습니다.");
-                }
+
                 break;
-            case R.id.tResetBtn:    //초기화
+            case R.id.timerResetBtn:    //초기화
                 //시간을 초기값으로
-                timeMNum = MainActivity.timeDefault / 60;
-                timeSNum = MainActivity.timeDefault % 60;
-                minuteNumPick.setValue(timeMNum);
-                secondNumPick.setValue(timeSNum);
+                minute = MainActivity.defTime / 60;
+                second = MainActivity.defTime % 60;
+                minPick.setValue(minute);
+                secPick.setValue(second);
                 //세트수 초기화
                 setNum = 0;
                 setSetNum(setNum);
                 //횟수 임시저장값 초기화
-                repsPerSet = new StringBuilder();
+                rpsBuilder = new StringBuilder();
                 break;
         }
     }
@@ -201,27 +208,28 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
     public void onStop() {
         super.onStop();
         MainActivity.setNum = setNum;
+        MainActivity.defTime = (minPick.getValue() * 60) + secPick.getValue();
     }
 
-    private void tInsertSeq(String selectDate, String selectType, String selectName, String selectVolume, String selectNumber) {
+    private void insertSeq(String date, String type, String name, String volume, String number) {
         DBHelper helper = new DBHelper(getActivity(), "record.db", null, 1);
         try {
-            if (helper.dataInsert(MainActivity.seq, selectDate, selectType, selectName, setNum, selectVolume, selectNumber)) {
-                MainActivity.exerciseDAO.insertObj(MainActivity.seq, selectDate, selectType, selectName, setNum, selectVolume, selectNumber);
-                Log.d(TAG, "record seq = " + MainActivity.seq);
+            if (helper.dataInsert(MainActivity.seq, date, type, name, setNum, volume, number)) {
+                Log.i(TAG, "record seq = " + MainActivity.seq);
+                MainActivity.exerciseDAO.insertObj(MainActivity.seq, date, type, name, setNum, volume, number);
                 MainActivity.seq++;
 
-                makeToast(selectName + " (으)로 기록되었습니다.");
+                makeToast(name + " (으)로 기록되었습니다.");
 
                 setNum = 0;
                 setSetNum(setNum);
             }
         }catch (SQLiteConstraintException uniqueE) {
             Log.e(TAG, "unique exception");
-            Log.e(TAG, "seq = " + MainActivity.seq + " -> " + (MainActivity.lastSeq + 1));
+            Log.d(TAG, "seq = " + MainActivity.seq + " -> " + (MainActivity.lastSeq + 1));
             MainActivity.seq = MainActivity.lastSeq + 1;
 
-            tInsertSeq(selectDate, selectType, selectName, selectVolume, selectNumber);
+            insertSeq(date, type, name, volume, number);
         }catch (Exception e) {
             e.printStackTrace();
             makeToast("예기치 못한 오류입니다");

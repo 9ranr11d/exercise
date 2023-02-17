@@ -26,26 +26,26 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/cSAddBtn"
+                android:id="@+id/sCalendarAddBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/add" />
 
             <TextView
-                android:id="@+id/cSTitleTex"
+                android:id="@+id/sCalendarTitleBtn"
                 android:layout_width="260dp"
                 android:layout_height="30dp"
                 android:text="제목"
                 android:textSize="15dp" />
 
             <Button
-                android:id="@+id/cSTopBtn"
+                android:id="@+id/sCalendarTopBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/top" />
 
             <Button
-                android:id="@+id/cSCloseBtn"
+                android:id="@+id/sCalendarCloseBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/delete" />
@@ -54,12 +54,12 @@
 
 
         <ScrollView
-            android:id="@+id/scrollView"
+            android:id="@+id/sCalendarScroll"
             android:layout_width="match_parent"
             android:layout_height="300dp">
 
             <GridLayout
-                android:id="@+id/gridLay"
+                android:id="@+id/sCalendarGridLay"
                 android:layout_width="wrap_content"
                 android:layout_height="300dp"
                 android:layout_gravity="center_horizontal"

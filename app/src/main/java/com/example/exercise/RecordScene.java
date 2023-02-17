@@ -24,17 +24,17 @@ import java.util.Arrays;
 
 public class RecordScene extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "RecordScene";
-    private int setNum = 0, editSize = MainActivity.DPI * 60, selSpinner = 0, texColor = 0, highlightColor = 0, hintColor = 0, routine = 0;
-    private int[] repsPerSet;
+    private int setNum = 0, editSize = MainActivity.dotsPerInch * 60, selectedSpiNum = 0, texColor = 0, highlightColor = 0, hintColor = 0, routine = 0;
+    private int[] rpsIntAry;
 
-    private GridLayout reVolnNumGridLay;
-
-    private EditText[] volumeEdit, numberEdit;
-    private EditText eNameEdit;
-    private Button recordOkBtn, recordCalBtn;
-    private Spinner eTypeSpi;
+    private GridLayout gridLay;
+    private EditText[] volEdit, numEdit;
+    private EditText nameEdit;
+    private Button recordOkBtn, recordCancelBtn;
+    private Spinner typeSpi;
 
     public static Activity recordScene;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,34 +43,35 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         recordScene = RecordScene.this;
 
         texColor = ContextCompat.getColor(this, R.color.color_text);
-        Log.d(TAG, "text color = " + Integer.toHexString(texColor));
         highlightColor = ContextCompat.getColor(this, R.color.color_primary);
-        Log.d(TAG, "highlight color = " + Integer.toHexString(texColor));
         hintColor = ContextCompat.getColor(this, R.color.color_hint);
-        Log.d(TAG, "hint text color = " + Integer.toHexString(texColor));
+
+        Log.i(TAG, "text color = " + Integer.toHexString(texColor));
+        Log.i(TAG, "highlight color = " + Integer.toHexString(texColor));
+        Log.i(TAG, "hint text color = " + Integer.toHexString(texColor));
         //레이아웃
-        reVolnNumGridLay = findViewById(R.id.reVolnNumGridLay);
-        //Btn
-        recordOkBtn = findViewById(R.id.recordOkBtn);
-        recordCalBtn = findViewById(R.id.recordCanBtn);
+        gridLay = findViewById(R.id.sRecordGridLay);
+        //버튼
+        recordOkBtn = findViewById(R.id.sRecordOkBtn);
+        recordCancelBtn = findViewById(R.id.sRecordCncBtn);
 
         recordOkBtn.setOnClickListener(this);
-        recordCalBtn.setOnClickListener(this);
+        recordCancelBtn.setOnClickListener(this);
         //Edit
-        eNameEdit = findViewById(R.id.eNameEdit);
+        nameEdit = findViewById(R.id.sRecordNameEdit);
         //스피너
-        eTypeSpi = findViewById(R.id.eTypeSpi);
+        typeSpi = findViewById(R.id.sRecordTypeSpi);
         //스피너 목록
-        String[] eType = getResources().getStringArray(R.array.exerciseType);
+        String[] typeStrAry = getResources().getStringArray(R.array.exerciseType);
         //운동 부위 스피너 테마
-        ArrayAdapter eTypeAdapter = new ArrayAdapter(getApplication(), R.layout.spinner_cover, eType);
-        eTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        eTypeSpi.setAdapter(eTypeAdapter);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getApplication(), R.layout.spinner_cover, typeStrAry);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpi.setAdapter(arrayAdapter);
         //운동 부위 스피너 리스너
-        eTypeSpi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        typeSpi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selSpinner = i;    //선택된 운동 부위 스피너의 번호
+                selectedSpiNum = i;    //선택된 운동 부위 스피너의 번호
             }
 
             @Override
@@ -78,118 +79,116 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
 
             }
         });
-        eTypeSpi.setSelection(selSpinner);
+        typeSpi.setSelection(selectedSpiNum);
         //세트 수를 받아옴
-        Intent getRecordIntent = getIntent();
-        setNum = getRecordIntent.getIntExtra("set_n", 0);
-        Log.d(TAG, "set num = " + setNum);
-        routine = getRecordIntent.getIntExtra("eName", 1);
-        Log.d(TAG, "routine nume = " + routine);
-        repsPerSet = new int[setNum];
-        repsPerSet = getRecordIntent.getIntArrayExtra("reps_per_set");
-        Log.d(TAG, "reps per set = " + Arrays.toString(repsPerSet));
+        Intent recdIntent = getIntent();
+        setNum = recdIntent.getIntExtra("SET_NUM", 0);
+        routine = recdIntent.getIntExtra("NAME", 1);
+        rpsIntAry = new int[setNum];
+        rpsIntAry = recdIntent.getIntArrayExtra("REPS_PER_SET");
 
-        eNameEdit.setText("routine" + routine);
+        Log.i(TAG, "receive set num from timer = " + setNum);
+        Log.i(TAG, "receive routine num from timer = " + routine);
+        Log.i(TAG, "receive reps per set from timer = " + Arrays.toString(rpsIntAry));
+
+        nameEdit.setText("routine" + routine);
         //세트 수만큼 무게 입력 Edit을 만듦
-        volumeEdit = new EditText[setNum];
-        numberEdit = new EditText[setNum];
+        volEdit = new EditText[setNum];
+        numEdit = new EditText[setNum];
         for(int i = 0; i < setNum; i++) {
-            volumeEdit[i] = new EditText(getApplication());
-            volumeEdit[i].setHint("무게");               //각 Edit에 해당 세트 번호를 띄움
-            volumeEdit[i].setHintTextColor(hintColor);
-            volumeEdit[i].setTextColor(texColor);
-            volumeEdit[i].setBackgroundTintList(ColorStateList.valueOf(texColor));
+            volEdit[i] = new EditText(getApplication());
+            volEdit[i].setHint("무게");               //각 Edit에 해당 세트 번호를 띄움
+            volEdit[i].setHintTextColor(hintColor);
+            volEdit[i].setTextColor(texColor);
+            volEdit[i].setBackgroundTintList(ColorStateList.valueOf(texColor));
+            volEdit[i].setHighlightColor(highlightColor);
+            volEdit[i].setWidth(editSize);
+            volEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //Edit에 숫자만 입력 가능
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                volumeEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
+                volEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
 //                    numberEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.edit_text_view_handle));
             }
-            volumeEdit[i].setHighlightColor(highlightColor);
-            volumeEdit[i].setWidth(editSize);
-            volumeEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //Edit에 숫자만 입력 가능
 
-            reVolnNumGridLay.addView(volumeEdit[i]);
+            gridLay.addView(volEdit[i]);
 
             TextView slash = new TextView(getApplication());
             slash.setText((i + 1) + "회");
             slash.setTextColor(texColor);
 
-            reVolnNumGridLay.addView(slash);
+            gridLay.addView(slash);
 
-            numberEdit[i] = new EditText(getApplication());
+            numEdit[i] = new EditText(getApplication());
             //임시저장값이 없으면 생략
-            if(repsPerSet[i] != 0)
-                numberEdit[i].setText(String.valueOf(repsPerSet[i]));
+            if(rpsIntAry[i] != 0)
+                numEdit[i].setText(String.valueOf(rpsIntAry[i]));
 
-            numberEdit[i].setHint("횟수");               //각 Edit에 해당 세트 번호를 띄움
-            numberEdit[i].setHintTextColor(hintColor);
-            numberEdit[i].setTextColor(texColor);
-            numberEdit[i].setBackgroundTintList(ColorStateList.valueOf(texColor));
-            //커서, 핸들러
+            numEdit[i].setHint("횟수");               //각 Edit에 해당 세트 번호를 띄움
+            numEdit[i].setHintTextColor(hintColor);
+            numEdit[i].setTextColor(texColor);
+            numEdit[i].setBackgroundTintList(ColorStateList.valueOf(texColor));
+            numEdit[i].setHighlightColor(highlightColor);
+            numEdit[i].setWidth(editSize);
+            numEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //Edit에 숫자만 입력 가능
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                numberEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
+                numEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
 //                    numberEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.edit_text_view_handle));
             }
 
-            numberEdit[i].setHighlightColor(highlightColor);
-            numberEdit[i].setWidth(editSize);
-            numberEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //Edit에 숫자만 입력 가능
-
-            reVolnNumGridLay.addView(numberEdit[i]);
+            gridLay.addView(numEdit[i]);
         }
     }
     //EditText null값 여부 조사
-    private boolean checkEmpty(EditText[] checkEdit) {
-        for(int i = 0; i < checkEdit.length; i++) {
-            if(checkEdit[i].getText().toString().equals("") || checkEdit[i].getText().toString().equals(null)) {
+    private boolean checkEmpty(EditText[] chkEdit) {
+        for(int i = 0; i < chkEdit.length; i++) {
+            if(chkEdit[i].getText().toString().equals("") || chkEdit[i].getText().toString().equals(null))
                 return false;
-            }
         }
         return true;
     }
 
     @Override
     public void onClick(View view) {
-        Intent reRecordIntent = new Intent();
         switch (view.getId()) {
-            case R.id.recordOkBtn:      //기록
-                StringBuilder mergeVol = new StringBuilder(), mergeNum = new StringBuilder();
-                if(checkEmpty(volumeEdit) && checkEmpty(numberEdit)) {
+            case R.id.sRecordOkBtn:      //기록
+                StringBuilder volBuilder = new StringBuilder(), numBuilder = new StringBuilder();
+                if(checkEmpty(volEdit) && checkEmpty(numEdit)) {
                     for (int i = 0; i < setNum; i++) {
-                        mergeVol.append(volumeEdit[i].getText());
-                        mergeNum.append(numberEdit[i].getText());
+                        volBuilder.append(volEdit[i].getText());
+                        numBuilder.append(numEdit[i].getText());
                         if (i != setNum - 1) {
-                            mergeVol.append(",");                   //입력받은 모든 무게, 횟수 Edit을 ,를 구분점으로 합침
-                            mergeNum.append(",");
+                            volBuilder.append(",");                   //입력받은 모든 무게, 횟수 Edit을 ,를 구분점으로 합침
+                            numBuilder.append(",");
                         }
                     }
                 }else {
                     for (int i = 0; i < setNum; i++) {
-                        if(volumeEdit[i].getText().toString().equals("") || volumeEdit[i].getText().toString().equals(null))
-                            mergeVol.append("0");
+                        if(volEdit[i].getText().toString().equals("") || volEdit[i].getText().toString().equals(null))
+                            volBuilder.append("0");
                         else
-                            mergeVol.append(volumeEdit[i].getText());
+                            volBuilder.append(volEdit[i].getText());
 
-                        if(numberEdit[i].getText().toString().equals("") || numberEdit[i].getText().toString().equals(null))
-                            mergeNum.append("0");
+                        if(numEdit[i].getText().toString().equals("") || numEdit[i].getText().toString().equals(null))
+                            numBuilder.append("0");
                         else
-                            mergeNum.append(numberEdit[i].getText());
+                            numBuilder.append(numEdit[i].getText());
 
                         if (i != setNum - 1) {
-                            mergeVol.append(",");                   //입력받은 모든 무게, 횟수 Edit을 ,를 구분점으로 합침
-                            mergeNum.append(",");
+                            volBuilder.append(",");                   //입력받은 모든 무게, 횟수 Edit을 ,를 구분점으로 합침
+                            numBuilder.append(",");
                         }
                     }
                 }
-                reRecordIntent.putExtra("volume", mergeVol.toString()); //합친 무게, 횟수 String을 돌려줌
-                reRecordIntent.putExtra("number", mergeNum.toString());
-                reRecordIntent.putExtra("type", eTypeSpi.getSelectedItem().toString());
-                reRecordIntent.putExtra("name", eNameEdit.getText().toString());
+                Intent backIntent = new Intent();
+                backIntent.putExtra("VOLUME", volBuilder.toString()); //합친 무게, 횟수 String을 돌려줌
+                backIntent.putExtra("NUMBER", numBuilder.toString());
+                backIntent.putExtra("TYPE", typeSpi.getSelectedItem().toString());
+                backIntent.putExtra("NAME", nameEdit.getText().toString());
 
-                setResult(2, reRecordIntent);
+                setResult(2, backIntent);
                 finish();
                 break;
-            case R.id.recordCanBtn:     //취소
-                setResult(RESULT_CANCELED, reRecordIntent);
+            case R.id.sRecordCncBtn:     //취소
+                setResult(RESULT_CANCELED);
                 finish();
                 break;
         }
@@ -205,6 +204,6 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TimerScene.rSFlag = false;
+        TimerScene.isRecordSceneFlag = false;
     }
 }

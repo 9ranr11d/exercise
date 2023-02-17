@@ -22,7 +22,7 @@
             android:layout_gravity="left"
             android:background="@drawable/button_background"
             android:text="초기화"
-            android:id="@+id/tResetBtn" />
+            android:id="@+id/timerResetBtn" />
 
         <LinearLayout
             android:layout_width="350dp"
@@ -32,7 +32,7 @@
             android:orientation="horizontal">
 
             <NumberPicker
-                android:id="@+id/minuteNumPick"
+                android:id="@+id/timerMinPick"
                 android:theme="@style/RestTimeNumPick"
                 android:selectionDividerHeight="0dp"
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                 android:textSize="70dp" />
 
             <NumberPicker
-                android:id="@+id/secondNumPick"
+                android:id="@+id/timerSecPick"
                 android:theme="@style/RestTimeNumPick"
                 android:selectionDividerHeight="0dp"
                 android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                     android:textSize="30dp" />
 
                 <TextView
-                    android:id="@+id/setTex"
+                    android:id="@+id/timerSetTex"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:gravity="right"
@@ -91,14 +91,14 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/setPlusBtn"
+                        android:id="@+id/timerPlusBtn"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:background="@drawable/plus"
                         android:textAlignment="center" />
 
                     <Button
-                        android:id="@+id/setMinusBtn"
+                        android:id="@+id/timerMinusBtn"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:background="@drawable/minus"
@@ -109,7 +109,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/dbSaveBtn"
+                android:id="@+id/timerSaveBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_background"
@@ -119,7 +119,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/timeStartBtn"
+            android:id="@+id/timerStartBtn"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:background="@drawable/button_background"

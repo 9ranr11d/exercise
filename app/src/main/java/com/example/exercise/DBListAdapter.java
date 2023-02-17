@@ -17,21 +17,21 @@ import java.util.Set;
 //리사이클뷰
 public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder> {
     private ArrayList<Exercise> localDataSet;
-    private HashMap<Integer, String> checkedMap = new HashMap<>();
+    private HashMap<Integer, String> chkMap = new HashMap<>();
     private HashMap<Integer, String> allListMap = new HashMap<>();
     //목록의 한줄의 틀
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView dbDateListTex, dbTypeListTex, dbNameListTex, dbSetNListTex, dbVolumeListTex;
-        private CheckBox dbDataListCheck;
+        private TextView dateTex, typeTex, nameTex, setNumTex, volumeTex;
+        private CheckBox chk;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            dbDateListTex = itemView.findViewById(R.id.dbDateListTex);
-            dbTypeListTex = itemView.findViewById(R.id.dbTypeListTex);
-            dbNameListTex = itemView.findViewById(R.id.dbNameListTex);
-            dbSetNListTex = itemView.findViewById(R.id.dbSetNListTex);
-            dbVolumeListTex = itemView.findViewById(R.id.dbVolumeListTex);
-            dbDataListCheck = itemView.findViewById(R.id.dbDataListCheck);
+            dateTex = itemView.findViewById(R.id.recyclerDateTex);
+            typeTex = itemView.findViewById(R.id.recyclerTypeTex);
+            nameTex = itemView.findViewById(R.id.recyclerNameTex);
+            setNumTex = itemView.findViewById(R.id.recyclerSetNumTex);
+            volumeTex = itemView.findViewById(R.id.recyclerVolumeTex);
+            chk = itemView.findViewById(R.id.recyclerChk);
         }
     }
     //목록에 삽입할 데이터리스트
@@ -39,7 +39,7 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
         localDataSet = dataSet;
         for(int i = 0; i < localDataSet.size(); i++) {
             String[] localData = localDataSet.get(i).toString().split(":");
-            allListMap.put(i, localData[0]);
+            allListMap.put(i, localData[0]);    //('i', 'SEQ')
         }
     }
     @NonNull
@@ -54,33 +54,28 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
     //각 목록 생성
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String text = localDataSet.get(position).toString();
-        String[] tempText = text.split(":");
+        String str = localDataSet.get(position).toString();
+        String[] tempStr = str.split(":");
 
-        holder.dbDateListTex.setText(tempText[1].substring(2).replace("-", ""));
-        holder.dbTypeListTex.setText(tempText[2]);
-        holder.dbNameListTex.setText(tempText[3]);
-        holder.dbSetNListTex.setText(tempText[4]);
-        holder.dbVolumeListTex.setText(MainActivity.stringFormat(tempText[5], tempText[6]));
-
-//        holder.dbDataListCheck.setOnCheckedChangeListener(null);
-        //checkedMap에 저장되어있는 체크유무를 판별
-        if(checkedMap.containsKey(position)) {
-            holder.dbDataListCheck.setChecked(true);
-        }else {
-            holder.dbDataListCheck.setChecked(false);
-        }
-
-        int tempPosition = position;
+        holder.dateTex.setText(tempStr[1].substring(2).replace("-", ""));  //날짜 (yyMMdd)
+        holder.typeTex.setText(tempStr[2]);                                                //운동부위
+        holder.nameTex.setText(tempStr[3]);                                                //운동이름
+        holder.setNumTex.setText(tempStr[4]);                                              //세트 수
+        holder.volumeTex.setText(MainActivity.stringFormat(tempStr[5], tempStr[6]));      //무게
+        //checkedMap에 저장되어있는 체크유무를 판별(처음에는 체크돼있는게 없으니 모두 false)
+        if(chkMap.containsKey(position))    //해당되는 키가 있으면 true
+            holder.chk.setChecked(true);
+        else
+            holder.chk.setChecked(false);
         //체크시 checkedMap에 저장
-        holder.dbDataListCheck.setOnClickListener(new View.OnClickListener() {
+        int tempPosition = position;
+        holder.chk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(holder.dbDataListCheck.isChecked()) {
-                    checkedMap.put(tempPosition, tempText[0]);
-                }else {
-                    checkedMap.remove(tempPosition);
-                }
+                if(holder.chk.isChecked())
+                    chkMap.put(tempPosition, tempStr[0]);  //('순서', 'SEQ')
+                else
+                    chkMap.remove(tempPosition);            //해당 위치의 Map 데이터 삭제
             }
         });
     }
@@ -89,38 +84,35 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
     public int getItemCount() {
         return localDataSet.size();
     }
-    //체크되어 있는 항목들의 position과 seq를 내보니기
-    public HashMap<Integer, String> lookupCheckedList() {
-        HashMap<Integer, String> tempCM = new HashMap<>(checkedMap);
+    //체크되어 있는 항목들의 position과 SEQ를 내보니기
+    public HashMap<Integer, String> getCheckedList() {
+        HashMap<Integer, String> tempCheckedMap = new HashMap<>(chkMap);
 
-        checkedMap.clear();
+        chkMap.clear();
 
-        return tempCM;
+        return tempCheckedMap;
     }
     //선택된 항목을 리사이클뷰에서 삭제
-    public void deleteChecked() {
-        Set<Integer> cMKeySet = checkedMap.keySet();
+    public void delList() {
+        Set<Integer> checkedKeySet = chkMap.keySet();                           //체크된 내역('순서', 'SEQ')을 가져옴
+        ArrayList<Integer> checkedKeyList = new ArrayList<>(checkedKeySet);
+        Collections.sort(checkedKeyList, Collections.reverseOrder());           //'SEQ'가 아니라 현재 리스트의 '순서'로 삭제하기에 밑에서부터 삭제해야 순서가 바뀌지 않음
 
-        ArrayList<Integer> deleteSortList = new ArrayList<>(cMKeySet);
-        Collections.sort(deleteSortList, Collections.reverseOrder());
-
-        Iterator deleteCheckPositIter = deleteSortList.iterator();
-
-        while (deleteCheckPositIter.hasNext()) {
-            int deleteCheckId = (int) deleteCheckPositIter.next();
-            notifyItemRemoved(deleteCheckId);
-            localDataSet.remove(deleteCheckId);
+        Iterator checkedKeyIterator = checkedKeyList.iterator();
+        while (checkedKeyIterator.hasNext()) {
+            int checkedSeq = (int) checkedKeyIterator.next();
+            notifyItemRemoved(checkedSeq);                                      //리스트 새로고침
+            localDataSet.remove(checkedSeq);
         }
     }
     //전체선택
     public void setSelectAll(int mode) {
         if(mode == 0) {
-            for (int i = localDataSet.size() - 1; i >= 0; i--) {
-                checkedMap.put(i, allListMap.get(i));
-            }
-        }else {
-            checkedMap.clear();
-        }
-        notifyDataSetChanged();
+            for(int i = 0; i < localDataSet.size(); i++)
+                chkMap.put(i, allListMap.get(i));
+        }else
+            chkMap.clear();
+
+        notifyDataSetChanged();     //리스트 새로고침
     }
 }
