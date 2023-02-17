@@ -14,6 +14,7 @@
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/drawable/forward.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/drawable/ic_baseline_expand_less_24.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1355" />
+        <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/drawable/management_search_view_background.xml" value="0.1565" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/drawable/minus2.xml" value="0.1895" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/drawable/plus2.xml" value="0.1895" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/drawable/popup_button_background.xml" value="0.109" />
@@ -31,13 +32,14 @@
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_db_manage_popup.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_dbmanage_popup.xml" value="0.264" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_main.xml" value="0.176" />
-        <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_popup.xml" value="0.1" />
+        <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_popup.xml" value="0.176" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_record_scen.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_record_scene.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_setting_scene.xml" value="0.264" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_timer_scen.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/activity_timer_scene.xml" value="0.12335359675785208" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/data_list_recycler_item.xml" value="0.1" />
+        <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/dialog_file_name.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/fragment_record_menu.xml" value="0.1" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/fragment_stopwatch_menu.xml" value="0.25364583333333335" />
         <entry key="..\:/a_ms/Android/Exercise/app/src/main/res/layout/fragment_timer_menu.xml" value="0.2" />

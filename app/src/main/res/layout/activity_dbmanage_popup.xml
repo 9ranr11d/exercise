@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="400dp"
+    android:layout_width="380dp"
     android:layout_height="500dp"
     android:orientation="vertical"
     android:gravity="center"
@@ -11,33 +11,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:paddingEnd="20dp"
         android:gravity="right"
         android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/fileNameEdit"
-            android:layout_width="100dp"
+        <SearchView
+            android:id="@+id/manageNameSearch"
+            android:layout_width="155dp"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:gravity="right"
-            android:hint="파일 이름" />
+            android:iconifiedByDefault="true"
+            android:queryHint="검색"/>
 
         <Button
-            android:id="@+id/manageSendBtn"
-            android:layout_width="wrap_content"
+            android:id="@+id/manageSaveBtn"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
             android:layout_margin="5dp"
-            android:text="(으)로 내보내기" />
+            android:text="내보내기"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/manageDelBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
             android:layout_margin="5dp"
-            android:text="삭제하기" />
+            android:text="삭제"
+            android:textSize="15sp" />
 
         <Button
             android:layout_width="20dp"
@@ -56,31 +56,31 @@
         <TextView android:text="날짜"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView android:text="부위"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView android:text="이름"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView android:text="세트"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView android:text="무게/횟수"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <CheckBox
             android:id="@+id/manageAllChk"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content" />
 
     </LinearLayout>

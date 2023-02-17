@@ -48,7 +48,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
             Intent launcherIntent = result.getData();
             if(result.getResultCode() == Activity.RESULT_OK) {      //쉬는 시간 끝
                 setNum = launcherIntent.getIntExtra("SET_NUM", 0);        //TimerScen으로 부터 세트 수 받아옴
-                setSetNum(setNum);
+                setSetTex(setNum);
                 //세트별 횟수 임시저장값
                 String recdRPS = launcherIntent.getStringExtra("REPS_PER_SET");
                 rpsBuilder.append(setNum).append(":");
@@ -72,7 +72,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 String timerType = launcherIntent.getStringExtra("TYPE");
                 String timerName = launcherIntent.getStringExtra("NAME");
                 //저장
-                insertSeq(getTime(), timerType, timerName, timerVol, timerNum);
+                checkException(getTime(), timerType, timerName, timerVol, timerNum);
 
                 rpsBuilder = new StringBuilder();
                 routine++;
@@ -121,7 +121,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
         //세이브 데이터 적용
         minPick.setValue(minute);
         secPick.setValue(second);
-        setSetNum(setNum);
+        setSetTex(setNum);
 
         return v;
     }
@@ -183,7 +183,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 secPick.setValue(second);
                 //세트수 초기화
                 setNum = 0;
-                setSetNum(setNum);
+                setSetTex(setNum);
                 //횟수 임시저장값 초기화
                 rpsBuilder = new StringBuilder();
                 break;
@@ -201,7 +201,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
         return nowFormat.format(nowDate);
     }
 
-    private void setSetNum(int setNum) {
+    private void setSetTex(int setNum) {
         setTex.setText(String.valueOf(setNum));
     }
     @Override
@@ -211,7 +211,7 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
         MainActivity.defTime = (minPick.getValue() * 60) + secPick.getValue();
     }
 
-    private void insertSeq(String date, String type, String name, String volume, String number) {
+    private void checkException(String date, String type, String name, String volume, String number) {
         DBHelper helper = new DBHelper(getActivity(), "record.db", null, 1);
         try {
             if (helper.dataInsert(MainActivity.seq, date, type, name, setNum, volume, number)) {
@@ -222,14 +222,14 @@ public class TimerMenu extends Fragment implements View.OnClickListener {
                 makeToast(name + " (으)로 기록되었습니다.");
 
                 setNum = 0;
-                setSetNum(setNum);
+                setSetTex(setNum);
             }
         }catch (SQLiteConstraintException uniqueE) {
             Log.e(TAG, "unique exception");
             Log.d(TAG, "seq = " + MainActivity.seq + " -> " + (MainActivity.lastSeq + 1));
             MainActivity.seq = MainActivity.lastSeq + 1;
 
-            insertSeq(date, type, name, volume, number);
+            checkException(date, type, name, volume, number);
         }catch (Exception e) {
             e.printStackTrace();
             makeToast("예기치 못한 오류입니다");

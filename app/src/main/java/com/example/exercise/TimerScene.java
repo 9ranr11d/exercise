@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -24,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,11 +31,11 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
     private int minute = 0, second = 0, setNum = 0, defMin = 0, defSec = 0, routine = 0;
     private String strRPS = "";
     private boolean isReserveFlag = false;
-    public static boolean isRecordSceneFlag = false;
+    public static boolean isSRecordFlag = false, isManageFlag = false;
 
     private TextView minTex, secTex, setTex, numTex;
     private EditText numEdit;
-    private Button stopBtn, reserveBtn, reserveCancelBtn;
+    private Button stopBtn, reserveBtn, reserveCancelBtn, managementBtn;
     private ProgressBar progressBar;
 
     private Timer timer;
@@ -54,12 +52,12 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         notificationManager.cancel(1);
 
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            Intent getTRecordIntent = result.getData();
+            Intent launcherIntent = result.getData();
             if(result.getResultCode() == 2) {           //예약
-                String timerVol = getTRecordIntent.getStringExtra("VOLUME");        //RecordScen으로 부터
-                String timerNum = getTRecordIntent.getStringExtra("NUMBER");
-                String timerType = getTRecordIntent.getStringExtra("TYPE");
-                String timerName = getTRecordIntent.getStringExtra("NAME");
+                String timerVol = launcherIntent.getStringExtra("VOLUME");        //RecordScen으로 부터
+                String timerNum = launcherIntent.getStringExtra("NUMBER");
+                String timerType = launcherIntent.getStringExtra("TYPE");
+                String timerName = launcherIntent.getStringExtra("NAME");
                 
                 reserveIntent.putExtra("VOLUME", timerVol);
                 reserveIntent.putExtra("NUMBER", timerNum);
@@ -87,21 +85,23 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         stopBtn = findViewById(R.id.sTimerStopBtn);
         reserveBtn = findViewById(R.id.sTimerReserveBtn);
         reserveCancelBtn = findViewById(R.id.sTimerReserveCancelBtn);
+        managementBtn = findViewById(R.id.sTimerManagementBtn);
 
         stopBtn.setOnClickListener(this);
         reserveBtn.setOnClickListener(this);
         reserveCancelBtn.setOnClickListener(this);
+        managementBtn.setOnClickListener(this);
 
         reserveCancelBtn.setEnabled(false);
         //프레스바
         progressBar = findViewById(R.id.sTimerProgress);
         //TimeMenu로부터
-        Intent recdTimerIntent = getIntent();
-        defMin = recdTimerIntent.getIntExtra("MINUTE", 1);
-        defSec = recdTimerIntent.getIntExtra("SECOND", 0);
-        setNum = recdTimerIntent.getIntExtra("SET_NUM", 0);
-        routine = recdTimerIntent.getIntExtra("ROUTINE", 1);
-        strRPS = recdTimerIntent.getStringExtra("REPS_PER_SET");
+        Intent recdSTimerIntent = getIntent();
+        defMin = recdSTimerIntent.getIntExtra("MINUTE", 1);
+        defSec = recdSTimerIntent.getIntExtra("SECOND", 0);
+        setNum = recdSTimerIntent.getIntExtra("SET_NUM", 0);
+        routine = recdSTimerIntent.getIntExtra("ROUTINE", 1);
+        strRPS = recdSTimerIntent.getStringExtra("REPS_PER_SET");
 
         minute = defMin;
         second = defSec;
@@ -132,15 +132,15 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                             minute--;
                         }
                         //분, 시 한자리 일때 빈자리 0으로 채움
-                        tenTimeFormat(second, secTex);
-                        tenTimeFormat(minute, minTex);
+                        setTenFormat(second, secTex);
+                        setTenFormat(minute, minTex);
                         progressBar.setProgress(getMaxTime(minute, second));
                         //분, 초가 0되면 종료
                         if(minute == 0 && second == 0) {
                             timer.cancel();
 
-                            tenTimeFormat(second, secTex);
-                            tenTimeFormat(minute, minTex);
+                            setTenFormat(second, secTex);
+                            setTenFormat(minute, minTex);
 
                             if(setNum > maxSet) {
                                 setNum = maxSet;
@@ -153,14 +153,18 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                                 reserveIntent.putExtra("REPS_PER_SET", numEdit.getText().toString());
                                 setResult(RESULT_OK, reserveIntent);
                             }
-                            else                //예약 O
+                            else                   //예약 O
                                 setResult(2, reserveIntent);
 
                             showNotify(TAG, "쉬는 시간 끝");
 
-                            if(isRecordSceneFlag) {
+                            if(isSRecordFlag) {   //위에 창이 떠있으면 종료
                                 RecordScene recordScene = (RecordScene) RecordScene.recordScene;
                                 recordScene.finish();
+                                Toast.makeText(getApplication(), "시간이 초과되어 취소되었습니다.", Toast.LENGTH_SHORT).show();
+                            }else if(isManageFlag) {
+                                DBManagePopup dbManagePopup = (DBManagePopup) DBManagePopup.dbManagePopup;
+                                dbManagePopup.finish();
                                 Toast.makeText(getApplication(), "시간이 초과되어 취소되었습니다.", Toast.LENGTH_SHORT).show();
                             }
 
@@ -173,14 +177,13 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
         return timerTask;
     }
     //10이하로 내려갈때 남은자리를 0으로 채움
-    private void tenTimeFormat(int time, TextView textView) {
+    private void setTenFormat(int time, TextView textView) {
         if(time < 10) {
             textView.setText("0" + time);
         }else {
             textView.setText(String.valueOf(time));
         }
     }
-
     //분, 초 합
     private int getMaxTime(int mit, int sec) {
         int sum = 0;
@@ -243,7 +246,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.sTimerReserveBtn:   //예약
-                isRecordSceneFlag = true;
+                isSRecordFlag = true;       //위에 창이 떠있음
                 int[] rpsIntAry = new int[setNum];
                 //저장된 임시저장값이 있을 때만 실행
                 if(strRPS.length() != 0) {
@@ -275,6 +278,13 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                 //예약 버튼 활성화, 예약취소 버튼 비활성화
                 reserveBtn.setEnabled(true);
                 reserveCancelBtn.setEnabled(false);
+                break;
+            case R.id.sTimerManagementBtn:
+                isManageFlag = true;       //위에 창이 떠있음
+                Intent toManageIntent = new Intent(this, DBManagePopup.class);
+                toManageIntent.putExtra("IS_SAVE_FLAG", false);
+
+                launcher.launch(toManageIntent);
                 break;
         }
     }

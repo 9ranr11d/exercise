@@ -61,7 +61,7 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
         holder.typeTex.setText(tempStr[2]);                                                //운동부위
         holder.nameTex.setText(tempStr[3]);                                                //운동이름
         holder.setNumTex.setText(tempStr[4]);                                              //세트 수
-        holder.volumeTex.setText(MainActivity.stringFormat(tempStr[5], tempStr[6]));      //무게
+        holder.volumeTex.setText(MainActivity.setStrFormat(tempStr[5], tempStr[6]));      //무게
         //checkedMap에 저장되어있는 체크유무를 판별(처음에는 체크돼있는게 없으니 모두 false)
         if(chkMap.containsKey(position))    //해당되는 키가 있으면 true
             holder.chk.setChecked(true);

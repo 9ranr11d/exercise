@@ -47,7 +47,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
             if(result.getResultCode() == Activity.RESULT_CANCELED)    //취소
                 makeToast("취소되었습니다.");
 
-            lookupRecord(selectedDate);
+            inquiryRecord(selectedDate);
         });
         //레이아웃
         gridLay = findViewById(R.id.sCalendarGridLay);
@@ -64,12 +64,12 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
         topBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(this);
         //선택한 날짜 받아와서 처리
-        Intent recdRecordIntent = getIntent();
-        selectedDate = recdRecordIntent.getStringExtra("SELECTED_DATE");
+        Intent recdCalendarIntent = getIntent();
+        selectedDate = recdCalendarIntent.getStringExtra("SELECTED_DATE");
         titleTex.setText(selectedDate);
         Log.i(TAG, "selected date from RecordMenu = " + selectedDate);
         //기록조회
-        lookupRecord(selectedDate);
+        inquiryRecord(selectedDate);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.sCalendarAddBtn:     //운동 추가
                 Intent addIntent = new Intent(getApplication(), PopupActivity.class);
-                addIntent.putExtra("MODE", 0);
+                addIntent.putExtra("IS_ADD_FLAG", true);
                 addIntent.putExtra("SELECTED_DATE", selectedDate);    //선택된 날짜를 포함
 
                 launcher.launch(addIntent);
@@ -91,7 +91,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
         }
     }
     //기록 조회
-    private void lookupRecord(String date) {
+    private void inquiryRecord(String date) {
         gridLay.removeAllViews();   //기록 모두 지움
         //선택 날짜의 모든 기록 담아옴
         ArrayList<Exercise> allRecordList = MainActivity.exerciseDAO.searchDateObj(date);
@@ -111,7 +111,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
                 recordCoverBuilder.append(tempType).append("\n")
                         .append(tempName).append("\n")
                         .append(tempSet).append("\n")
-                        .append(MainActivity.stringFormat(tempVol, tempNum));
+                        .append(MainActivity.setStrFormat(tempVol, tempNum));
 
                 recordBtn = new Button(getApplication());
                 recordBtn.setText(recordCoverBuilder.toString());     //버튼의 내용
@@ -129,7 +129,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
                         Log.d(TAG, "select date from CalendarScene" + tempSeq);
 
                         Intent toPopupIntent = new Intent(getApplication(), PopupActivity.class);
-                        toPopupIntent.putExtra("MODE", 1);
+                        toPopupIntent.putExtra("IS_ADD_FLAG", false);
                         toPopupIntent.putExtra("SEQ", tempSeq);
                         toPopupIntent.putExtra("SELECTED_DATE", selectedDate);
                         toPopupIntent.putExtra("TYPE", tempType);

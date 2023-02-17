@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
             android:text="관리"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/mCalendarView"
@@ -36,68 +36,5 @@
             app:mcv_selectionMode="single" />
 
     </LinearLayout>
-
-    <!--<LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/rounded_corner_rectangle"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.9">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/recordAddBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/add" />
-
-            <TextView
-                android:id="@+id/selectDate"
-                android:layout_width="300dp"
-                android:layout_height="30dp"
-                android:text="제목"
-                android:textAlignment="center"
-                android:textSize="15dp" />
-
-            <Button
-                android:id="@+id/scrollTopBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/top" />
-
-        </LinearLayout>
-
-
-        <ScrollView
-            android:id="@+id/scroll"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
-
-            <GridLayout
-                android:id="@+id/gridLay"
-                android:layout_width="wrap_content"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
-                android:columnCount="3"
-                android:orientation="horizontal"
-                android:paddingBottom="80dp"
-                android:rowCount="100">
-
-            </GridLayout>
-
-        </ScrollView>
-
-    </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,12 +33,13 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     private String[] volStrAry = null, numStrAry = null;
     private int editSize = MainActivity.dotsPerInch * 60;
     private int setNum = 0, texColor = 0, highlightColor = 0, hintColor = 0;
+    private boolean isAddFlag = true;
 
     private EditText nameTex;
     private EditText[] volEdit = new EditText[maxSet], numEdit = new EditText[maxSet];
     private TextView dateTex, setTex;
     private TextView[] slash = new TextView[maxSet];
-    private Button okBtn, cancelBtn, delBtn, nameDelBtn, plusBtn, minusBtn, insertBtn;
+    private Button okBtn, cancelBtn, delBtn, nameDelBtn, plusBtn, minusBtn;
     private Spinner typeSpi;
     private GridLayout gridLay;
 
@@ -66,7 +67,6 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         nameDelBtn = findViewById(R.id.popupNameDelBtn);
         plusBtn = findViewById(R.id.popupPlusBtn);
         minusBtn = findViewById(R.id.popupMinusBtn);
-        insertBtn = findViewById(R.id.popupInsBtn);
 
         okBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
@@ -74,7 +74,6 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         nameDelBtn.setOnClickListener(this);
         plusBtn.setOnClickListener(this);
         minusBtn.setOnClickListener(this);
-        insertBtn.setOnClickListener(this);
         //레이아웃
         gridLay = findViewById(R.id.popupGridLay);
         //스피너
@@ -99,20 +98,20 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         });
 
         String  type = "", name = "",volume = "", number = "";
-        Intent recdCalendarIntent = getIntent();
-        date = recdCalendarIntent.getStringExtra("SELECTED_DATE");
-
+        Intent recdPopupIntent = getIntent();
+        date = recdPopupIntent.getStringExtra("SELECTED_DATE");
         dateTex.setText(date);    //받아온 날짜를 제목으로 지정
         //1 : 수정, 삭제, 0 : 추가
-        int mode = recdCalendarIntent.getIntExtra("MODE", 0);
-        if(mode == 1) {
+        isAddFlag = recdPopupIntent.getBooleanExtra("IS_ADD_FLAG", true);
+        if(!isAddFlag) {
+            okBtn.setText("수정");
             //선택된 항목의 데이터 받아옴
-            seq = recdCalendarIntent.getStringExtra("SEQ");
-            type = recdCalendarIntent.getStringExtra("TYPE");
-            name = recdCalendarIntent.getStringExtra("NAME");
-            setNum = recdCalendarIntent.getIntExtra("SET_NUM", 0);
-            volume = recdCalendarIntent.getStringExtra("VOLUME");
-            number = recdCalendarIntent.getStringExtra("NUMBER");
+            seq = recdPopupIntent.getStringExtra("SEQ");
+            type = recdPopupIntent.getStringExtra("TYPE");
+            name = recdPopupIntent.getStringExtra("NAME");
+            setNum = recdPopupIntent.getIntExtra("SET_NUM", 0);
+            volume = recdPopupIntent.getStringExtra("VOLUME");
+            number = recdPopupIntent.getStringExtra("NUMBER");
             //받아온 운동 부위 스피너의 선택값
             int typeSpiNum = Arrays.asList(typeStrAry).indexOf(type);          //받아온 운동부위 배열 type을 리스트형식으로 바꾸고 위치를 찾는다
             typeSpi.setSelection(typeSpiNum);
@@ -161,11 +160,10 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
 
                 gridLay.addView(numEdit[i]);
             }
-            insertBtn.setEnabled(false);        //추가 버튼 비활성화
-        }else {                                 //mode가 0일때
+        }else {
+            okBtn.setText("추가");
             nameTex.setHint("이름");             //힌트
             setTex.setText(String.valueOf(setNum));
-            okBtn.setEnabled(false);            //수정 버튼
             delBtn.setEnabled(false);           //삭제 버튼 비활성화
         }
     }
@@ -174,9 +172,13 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         Intent intent = new Intent();
         switch (view.getId()) {
-            case R.id.popupOkBtn:        //수정
-                setNum = Integer.parseInt(setTex.getText().toString());     //에딧텍스트에 적힌 데이터를 다시 보냄
-                setPopupData(0);
+            case R.id.popupOkBtn:        //isAddFlag true : 추가, isAddFlag false : 수정
+                if(isAddFlag)
+                    insertRecord(1);
+                else {
+                    setNum = Integer.parseInt(setTex.getText().toString());     //에딧텍스트에 적힌 데이터를 다시 보냄
+                    insertRecord(0);
+                }
                 break;
             case R.id.popupCancelBtn:    //취소
                 setResult(RESULT_CANCELED, intent);
@@ -256,9 +258,6 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                     gridLay.removeView(numEdit[setNum]);         //선`택된 Edit 삭제
                 }
                 break;
-            case R.id.popupInsBtn:    //insert(추가) 버튼
-                setPopupData(1);
-                break;
         }
     }
     //Edit null 여부 조사
@@ -275,7 +274,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(getApplication(), str, Toast.LENGTH_SHORT).show();
     }
     //수정, 추가
-    private void setPopupData(int mode) {
+    private void insertRecord(int mode) {
         if(nameTex.getText().toString().equals("") || nameTex.getText().toString().equals(null))
             Toast.makeText(getApplication(), "운동 이름을 적어주세요", Toast.LENGTH_SHORT).show();
         else if(setNum == 0)
@@ -331,13 +330,13 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                     makeToast("수정 실패하였습니다.");
 
             }else           //mode 1 : add
-                insertSeq(selectedType, selectedName, selectedVol, selectedNum);
+                checkException(selectedType, selectedName, selectedVol, selectedNum);
 
             helper.close();
         }
     }
 
-    private void insertSeq(String type, String name, String volume, String number) {
+    private void checkException(String type, String name, String volume, String number) {
         DBHelper helper = new DBHelper(getApplication(), "record.db", null, 1);
         try {
             if (helper.dataInsert(MainActivity.seq, date, type, name, setNum, volume, number)) {
@@ -355,7 +354,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
             Log.e(TAG, "unique exception");
             Log.d(TAG, "seq = " + MainActivity.seq + " -> " + (MainActivity.lastSeq + 1));
             MainActivity.seq = MainActivity.lastSeq + 1;
-            insertSeq(type, name, volume, number);      //다른 예외는 없는지 재귀함수
+            checkException(type, name, volume, number);      //다른 예외는 없는지 재귀함수
         }catch (Exception e) {
             e.printStackTrace();
             makeToast("예기치 못한 오류입니다");

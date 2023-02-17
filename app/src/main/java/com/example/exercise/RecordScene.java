@@ -81,11 +81,11 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         });
         typeSpi.setSelection(selectedSpiNum);
         //세트 수를 받아옴
-        Intent recdIntent = getIntent();
-        setNum = recdIntent.getIntExtra("SET_NUM", 0);
-        routine = recdIntent.getIntExtra("NAME", 1);
+        Intent recdSRecordIntent = getIntent();
+        setNum = recdSRecordIntent.getIntExtra("SET_NUM", 0);
+        routine = recdSRecordIntent.getIntExtra("NAME", 1);
         rpsIntAry = new int[setNum];
-        rpsIntAry = recdIntent.getIntArrayExtra("REPS_PER_SET");
+        rpsIntAry = recdSRecordIntent.getIntArrayExtra("REPS_PER_SET");
 
         Log.i(TAG, "receive set num from timer = " + setNum);
         Log.i(TAG, "receive routine num from timer = " + routine);
@@ -204,6 +204,6 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TimerScene.isRecordSceneFlag = false;
+        TimerScene.isSRecordFlag = false;
     }
 }

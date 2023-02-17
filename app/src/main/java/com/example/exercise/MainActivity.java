@@ -113,12 +113,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setBtn.setOnClickListener(this);
         int defMit = defTime / 60, defSec = defTime % 60;
         //푸시알림으로부터 데이터를 받음
-        Intent notifyIntent = getIntent();
-        int tempMit = notifyIntent.getIntExtra("MINUTE", defMit);
-        int tempSec = notifyIntent.getIntExtra("SECOND", defSec);
-        int tempSetNum = notifyIntent.getIntExtra("SET_NUM", 0);
-        int tempRoutine = notifyIntent.getIntExtra("ROUTINE", 1);
-        String tempRPS = notifyIntent.getStringExtra("REPS_PER_SET");
+        Intent recdMainIntent = getIntent();
+        int tempMit = recdMainIntent.getIntExtra("MINUTE", defMit);
+        int tempSec = recdMainIntent.getIntExtra("SECOND", defSec);
+        int tempSetNum = recdMainIntent.getIntExtra("SET_NUM", 0);
+        int tempRoutine = recdMainIntent.getIntExtra("ROUTINE", 1);
+        String tempRPS = recdMainIntent.getStringExtra("REPS_PER_SET");
         //데이터를 프레그먼트로 전송을 위해 번들에 담음
         Bundle toTimerBundle = new Bundle();
         toTimerBundle.putInt("MINUTE", tempMit);
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bottomNavigationView.setSelectedItemId(R.id.timerItem);     //바텀 네비게이션 기본값을 TimerMenu로 설정
     }
     //두개의 배열을 하나씩 엮음
-    public static String stringFormat(String str1, String str2) {
+    public static String setStrFormat(String str1, String str2) {
         StringBuilder resultBuilder = new StringBuilder();
 
         String[] strAry1 = str1.split(",");

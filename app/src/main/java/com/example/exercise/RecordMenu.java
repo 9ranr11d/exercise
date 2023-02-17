@@ -119,15 +119,15 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
     private String setDateFormat(int year, int month, int day) {
         String result = "", tempMonth = "", tempDay = "";
 
-        tempMonth = tenNumFormat(month);
-        tempDay = tenNumFormat(day);
+        tempMonth = setTenFormat(month);
+        tempDay = setTenFormat(day);
 
         result = year + "-" + tempMonth + "-" + tempDay;
 
         return result;
     }
 
-    private String tenNumFormat(int number) {
+    private String setTenFormat(int number) {
         String result = "";
 
         if(number < 10)
@@ -142,17 +142,17 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
         materialCalendarView.removeDecorators();   //모든 Decorator 삭제
         //오늘 날짜 글자색
         materialCalendarView.addDecorator(new EventDecorator(todayColor,
-                    Collections.singleton(CalendarDay.today()), 2));
+                    Collections.singleton(CalendarDay.today()), false));
         //선택한 날짜 글자색
         materialCalendarView.addDecorator(new EventDecorator(selectedDateColor,
-                Collections.singleton(selectedCalendar), 2));
+                Collections.singleton(selectedCalendar), false));
         //Strings.xml로 부터 색상과 부위 배열을 가져옴
         String[] typeStrAry = getResources().getStringArray(R.array.exerciseType);
         int[] colorIntAry = getResources().getIntArray(R.array.exerTypeColor);
         //distDate set에 중복 없게 날짜를 저장, dateType에는 날짜랑 부위를 짝지어서 저장
         HashSet<String> distinctDateSet = new HashSet<>();
         ArrayList<String> dateNTypeList = new ArrayList<>();
-        for(Exercise exercise : MainActivity.exerciseDAO.exerList) {
+        for(Exercise exercise : MainActivity.exerciseDAO.exerciseList) {
             distinctDateSet.add(exercise.getDate());                          //모든 기록의 날짜를 중복없이 나열
             dateNTypeList.add(exercise.getDate() + ":" + exercise.getType());  //모든 기록을 ('날짜':'운동부위')쌍으로 나열
         }
@@ -174,7 +174,7 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
             int markingDay = Integer.parseInt(markingDate[2]);
 
             materialCalendarView.addDecorator(new EventDecorator(colorIntAry[colorNum],
-                    Collections.singleton(CalendarDay.from(markingYear, markingMonth, markingDay)), 1));
+                    Collections.singleton(CalendarDay.from(markingYear, markingMonth, markingDay)), true));
         }
     }
 
@@ -182,9 +182,10 @@ public class RecordMenu extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.recordManagementBtn:            //기록 관리 팝업으로
-                Intent intent = new Intent(getActivity(), DBManagePopup.class);
+                Intent toManageIntent = new Intent(getActivity(), DBManagePopup.class);
+                toManageIntent.putExtra("IS_SAVE_FLAG", true);
 
-                launcher.launch(intent);
+                launcher.launch(toManageIntent);
                 break;
         }
     }

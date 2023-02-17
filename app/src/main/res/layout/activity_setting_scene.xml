@@ -36,19 +36,22 @@
                 android:id="@+id/settingLightThemeBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Light" />
+                android:text="Light"
+                android:textSize="15sp" />
 
             <RadioButton
                 android:id="@+id/settingDarkThemeBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dark" />
+                android:text="Dark"
+                android:textSize="15sp" />
 
             <RadioButton
                 android:id="@+id/settingDefThemeBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Default" />
+                android:text="Default"
+                android:textSize="15sp" />
 
         </RadioGroup>
 

@@ -122,34 +122,32 @@ public class SettingScene extends AppCompatActivity implements View.OnClickListe
     }
     //앱 재실행
     private void showRestartDialog(int editStr, String varName) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("주의");
-        dialog.setMessage("확인을 누르면 앱 재시작됍니다.");
+        AlertDialog.Builder restartDialog = new AlertDialog.Builder(this);
+        restartDialog.setTitle("주의")
+                .setMessage("확인을 누르면 앱 재시작됍니다.")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.i(TAG, "out " + varName + " = " + editStr);
+                        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.fileName, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(varName, editStr);
+                        editor.commit();        //SharedPreference 값 저장
 
-        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.i(TAG, "out " + varName + " = " + editStr);
-                SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.fileName, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(varName, editStr);
-                editor.commit();        //SharedPreference 값 저장
+                        PackageManager packageManager = getPackageManager();
+                        Intent intent = packageManager.getLaunchIntentForPackage(getPackageName());
+                        ComponentName componentName = intent.getComponent();
+                        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                        startActivity(mainIntent);
+                        System.exit(0);   //시스템 종료
+                    }
+                }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
 
-                PackageManager packageManager = getPackageManager();
-                Intent intent = packageManager.getLaunchIntentForPackage(getPackageName());
-                ComponentName componentName = intent.getComponent();
-                Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-                startActivity(mainIntent);
-                System.exit(0);   //시스템 종료
-            }
-        });
-
-        dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        dialog.show();
+        restartDialog.show();
     }
 }

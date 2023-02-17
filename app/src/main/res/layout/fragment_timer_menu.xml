@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text=":"
-                android:textSize="70dp" />
+                android:textSize="70sp" />
 
             <NumberPicker
                 android:id="@+id/timerSecPick"
@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="세트 수 : "
-                    android:textSize="30dp" />
+                    android:textSize="30sp" />
 
                 <TextView
                     android:id="@+id/timerSetTex"
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:text="0"
-                    android:textSize="100dp" />
+                    android:textSize="100sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_background"
                 android:text="기록"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -124,7 +124,7 @@
             android:layout_height="50dp"
             android:background="@drawable/button_background"
             android:text="시작"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 

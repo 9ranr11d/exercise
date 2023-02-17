@@ -1,67 +1,73 @@
 package com.example.exercise;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 //Exercise 객체 DAO
 public class ExerciseDAO {
-    private final static String TAG = "ExerciseDAO";
-
-    public ArrayList<Exercise> exerList;
+    public ArrayList<Exercise> exerciseList;
 
     ExerciseDAO() {
-        exerList = new ArrayList<>();
+        exerciseList = new ArrayList<>();
     }
     //exerList에 추가하기
     public void insertObj(int seq, String date, String type, String name, int setN, String volume, String number) {
-        Exercise exer = new Exercise(seq, date, type, name, setN, volume, number);
-        exerList.add(exer);
+        Exercise exercise = new Exercise(seq, date, type, name, setN, volume, number);
+        exerciseList.add(exercise);
         //추가 후 정렬
-        Collections.sort(exerList, new Comparator<Exercise>() {        //seq로 1차 날짜로 2차 정렬
+        Collections.sort(exerciseList, new Comparator<Exercise>() {        //seq로 1차 날짜로 2차 정렬
             @Override
             public int compare(Exercise exer1, Exercise exer2) {
                 return Integer.compare(exer1.getSeq(), exer2.getSeq());
             }
         });
-        Collections.sort(exerList, Exercise::compareTo);
+        Collections.sort(exerciseList, Exercise::compareTo);
     }
     //id와 일치하는 객체 내보내기
     public Exercise searchSeqObj(int seq) {
-        Exercise exer = null;
-        for(int i = 0; i < exerList.size(); i++) {
-            exer = exerList.get(i);
-            if(exer.getSeq() == seq)
-                return exer;
+        Exercise resultExercise = null;
+
+        for(Exercise exercise : exerciseList) {
+            if(exercise.getSeq() == seq)
+                resultExercise = exercise;
         }
 
-        return exer;
+        return resultExercise;
     }
-    //일치하는 날짜의 운동목록 객체 가져오기
+    //날짜와 일치하는 운동목록 객체 가져오기
     public ArrayList<Exercise> searchDateObj(String date) {
-        ArrayList<Exercise> srchList = new ArrayList<>();
-        for(int i = 0; i < exerList.size(); i++) {
-            Exercise exer = exerList.get(i);
+        ArrayList<Exercise> resultList = new ArrayList<>();
 
-            if(exer.getDate().equals(date))
-                srchList.add(exer);
+        for(Exercise exercise : exerciseList) {
+            if(exercise.getDate().equals(date))
+                resultList.add(exercise);
         }
 
-        return srchList;
+        return resultList;
     }
     //객체 삭제
     public void deleteObj(int seq) {
-        for(int i = 0; i < exerList.size(); i++) {
-            Exercise exer = exerList.get(i);
-            if(exer.getSeq() == seq)
-                exerList.remove(i);
+        for(int i = 0; i < exerciseList.size(); i++) {
+            Exercise exercise = exerciseList.get(i);
+
+            if(exercise.getSeq() == seq)
+                exerciseList.remove(i);
         }
     }
     //객체 업데이트
     public void updateObj(int seq, String date, String type, String name, int setN, String volume, String number) {
         deleteObj(seq);
         insertObj(seq, date, type, name, setN, volume, number);
+    }
+    //이름과 일치하는 객체목록 내보내기
+    public ArrayList<Exercise> searchNameObj(String str) {
+        ArrayList<Exercise> resultList = new ArrayList<>();
+        for(Exercise exercise : exerciseList) {
+            if(exercise.getName().toLowerCase().contains(str))      //포함되는 단어 모두
+                resultList.add(exercise);
+        }
+
+        return resultList;
     }
 }

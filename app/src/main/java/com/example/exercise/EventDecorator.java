@@ -11,14 +11,15 @@ import java.util.Collection;
 import java.util.HashSet;
 //캘린더의 디지인
 public class EventDecorator implements DayViewDecorator {
-    private int color, flag;      //color : 표시할 색, signal : 1 -> 점, 2 -> 글자 색
+    private int color;
+    private boolean isDotFlag;
 
     private final HashSet<CalendarDay> dates;
 
-    public EventDecorator(int color, Collection<CalendarDay> dates, int flag) {
+    public EventDecorator(int color, Collection<CalendarDay> dates, boolean isDotFlag) {
         this.color = color;
         this.dates = new HashSet<>(dates);
-        this.flag = flag;
+        this.isDotFlag = isDotFlag;
     }
 
     @Override
@@ -28,9 +29,9 @@ public class EventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        if(flag == 1) {
+        if(isDotFlag) {
             view.addSpan(new DotSpan(8, color));    //signal 1 : 점
-        }else if(flag == 2) {
+        }else {
             view.addSpan(new ForegroundColorSpan(color)); //signal 2 : 글자 색
         }
     }

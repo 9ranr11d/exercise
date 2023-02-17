@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="400dp"
+    android:layout_width="380dp"
     android:layout_height="30dp"
     android:gravity="center"
     android:orientation="horizontal" >
@@ -9,25 +9,25 @@
         android:id="@+id/recyclerDateTex"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/recyclerTypeTex"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/recyclerNameTex"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/recyclerSetNumTex"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/recyclerVolumeTex"
@@ -35,11 +35,11 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:ellipsize="end"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <CheckBox
         android:id="@+id/recyclerChk"
-        android:layout_width="50dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content" />
 
 </LinearLayout>
