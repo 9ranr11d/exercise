@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -168,9 +169,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return resultBuilder.toString();     //('str1'/'str2', 'str1'/'str2, ...)
     }
-    @Override   //앱 종료시 테마모드와 SEQ를 저장
+
+    @Override
     protected void onStop() {
         super.onStop();
+        //앱 종료시 테마모드와 SEQ를 저장
         SharedPreferences sharedPreferences = getSharedPreferences(fileName, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("SEQ", seq);
@@ -180,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG, "out seq = " + seq);
         Log.i(TAG, "out theme mode = " + themeMode);
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -189,5 +193,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 launcher.launch(settingIntent);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //앱 종료시 푸쉬 알림 제거
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(1);
     }
 }
