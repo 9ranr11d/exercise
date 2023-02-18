@@ -41,6 +41,8 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
     private SearchView nameSearch;
     private CheckBox allChk;
 
+    private boolean isSaveFlag = false;
+
     private DBListAdapter listAdapter;
 
     public static Activity dbManagePopup;
@@ -80,7 +82,7 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
         });
 
         Intent recdManageIntent = getIntent();
-        boolean isSaveFlag = recdManageIntent.getBooleanExtra("IS_SAVE_FLAG", true);
+        isSaveFlag = recdManageIntent.getBooleanExtra("IS_SAVE_FLAG", true);
 
         if(isSaveFlag) {
             saveBtn.setEnabled(true);
@@ -239,5 +241,12 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
         saveIntent.setType("application/excel");
         saveIntent.putExtra(Intent.EXTRA_STREAM, path);
         startActivity(Intent.createChooser(saveIntent,"엑셀파일로 내보내기"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(!isSaveFlag)
+            TimerScene.isManageFlag = false;
     }
 }

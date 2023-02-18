@@ -26,6 +26,7 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
     private final String TAG = "RecordScene";
     private int setNum = 0, editSize = MainActivity.dotsPerInch * 60, selectedSpiNum = 0, texColor = 0, highlightColor = 0, hintColor = 0, routine = 0;
     private int[] rpsIntAry;
+    private boolean isSTimerFlag = false;
 
     private GridLayout gridLay;
     private EditText[] volEdit, numEdit;
@@ -84,6 +85,7 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         Intent recdSRecordIntent = getIntent();
         setNum = recdSRecordIntent.getIntExtra("SET_NUM", 0);
         routine = recdSRecordIntent.getIntExtra("NAME", 1);
+        isSTimerFlag = recdSRecordIntent.getBooleanExtra("IS_S_TIMER_FLAG", false);
         rpsIntAry = new int[setNum];
         rpsIntAry = recdSRecordIntent.getIntArrayExtra("REPS_PER_SET");
 
@@ -204,6 +206,7 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TimerScene.isSRecordFlag = false;
+        if(isSTimerFlag)
+            TimerScene.isSRecordFlag = false;
     }
 }

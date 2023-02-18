@@ -266,6 +266,7 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
                 toSRecordIntent.putExtra("SET_NUM", setNum);
                 toSRecordIntent.putExtra("NAME", routine);
                 toSRecordIntent.putExtra("REPS_PER_SET", rpsIntAry);
+                toSRecordIntent.putExtra("IS_S_TIMER_FLAG", true);
 
                 launcher.launch(toSRecordIntent);
                 //예약 버튼 비활성화, 예약취소 버튼 활성화
