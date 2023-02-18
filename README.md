@@ -374,27 +374,3 @@ public void setSelectAll(int mode) {
     notifyDataSetChanged();     //새로고침
 }
 ```
-
-## 배운점
-- 개념만 알고 있던 Listener의 활용법
-- 객체 생성과 객체 관리(DAO)의 활용법
-- DB연결과 보안성 관련 문제 해결법
-- Class의 재활용 방법
-- 함수의 재활용 방법
-- Activity 간의 이동 및 데이터 이동 방법
-- static, final 변수 선언의 중요성
-- Log를 사용해 오류의 위치 추정 하는 법
-- 예외처리 필요성
-- 버전 관리의 필요성
-- 테스트의 필요성
-- 디자인의 중요성
-- 다양한 View의 종류
-- 테마의 상속 개념
-- Thread의 개념
-- Popup과 Dialog의 차이
-- Notification 개념
-- 생명주기 개념
-- Fragment 개념
-- List, Map을 이용한 데이터 관리
-- 동적뷰의 개념
-- strings.xml, color.xml, theme.xml의 사용법
