@@ -11,10 +11,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,11 +36,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 //데이터 관리 팝업
 public class DBManagePopup extends AppCompatActivity implements View.OnClickListener {
+    public final static String TAG = "DBManagePopup";
     private Button delBtn, saveBtn, closeBtn;
     private SearchView nameSearch;
     private CheckBox allChk;
@@ -81,6 +87,8 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        makeRecycler(MainActivity.exerciseDAO.exerciseList);
+
         Intent recdManageIntent = getIntent();
         isSaveFlag = recdManageIntent.getBooleanExtra("IS_SAVE_FLAG", true);
 
@@ -92,16 +100,13 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
             saveBtn.setEnabled(false);
             delBtn.setEnabled(false);
         }
-
-        makeRecycler(MainActivity.exerciseDAO.exerciseList);
     }
 
     private void makeToast(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
-    //데이터 목록 조회
+    //리사이클뷰 생성
     private void makeRecycler(ArrayList<Exercise> list) {
-        //라사이클뷰 생성
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager((Context) this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -111,12 +116,13 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.manageDelBtn:    //삭제하기
+            case R.id.manageDelBtn:         //삭제하기
                 try {
                     listAdapter.delList();  //목록 삭제
 
                     Collection<String> delCheckedCollection = listAdapter.getCheckedList().values();    //체크된 항목의 SEQ 가져오기
-                    ArrayList<String> delCheckedList = new ArrayList<>(delCheckedCollection);                  //체크된 항목을 ArrayList형식으로 바꿈
+                    ArrayList<String> delCheckedList = new ArrayList<>(delCheckedCollection);           //체크된 항목을 ArrayList형식으로 바꿈
+                    Log.i(TAG, "delete checked list = " + delCheckedList);
 
                     DBHelper helper = new DBHelper(this, "record.db", null, 1);
                     SQLiteDatabase db = helper.getWritableDatabase();
@@ -128,6 +134,7 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
                         while (delCheckedIterator.hasNext()) {
                             String dataSeq = (String) delCheckedIterator.next();
                             db.delete("EXERCISE_TB", "SEQ = ?", new String[]{dataSeq}); //DB 속 데이터 삭제
+                            MainActivity.exerciseDAO.deleteObj(Integer.parseInt(dataSeq));              //DAO list 속 데이터 삭제
                         }
                         makeToast("삭제되었습니다.");
                     }
@@ -248,5 +255,22 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
         super.onDestroy();
         if(!isSaveFlag)
             TimerScene.isManageFlag = false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();         //현재 포커스하고 있는 뷰 가져오기
+        if(focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);   //포커스 있는 뷰를 영역으로 지정
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if(!rect.contains(x, y)) {              //클릭한 위치가 영역내에 없으면 실행?
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(inputMethodManager != null)
+                    inputMethodManager.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

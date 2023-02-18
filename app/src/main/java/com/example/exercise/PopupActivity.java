@@ -172,7 +172,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         Intent intent = new Intent();
         switch (view.getId()) {
-            case R.id.popupOkBtn:        //isAddFlag true : 추가, isAddFlag false : 수정
+            case R.id.popupOkBtn:           //isAddFlag true : 추가, isAddFlag false : 수정
                 if(isAddFlag)
                     insertRecord(1);
                 else {
@@ -180,11 +180,11 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                     insertRecord(0);
                 }
                 break;
-            case R.id.popupCancelBtn:    //취소
+            case R.id.popupCancelBtn:       //취소
                 setResult(RESULT_CANCELED, intent);
                 finish();
                 break;
-            case R.id.popupDelBtn:    //삭제
+            case R.id.popupDelBtn:          //삭제
                 DBHelper helper = new DBHelper(getApplication(), "record.db", null, 1);
                 if(helper.dataDelete(seq)) {
                     Log.i(TAG, "delete seq = " + seq);
@@ -198,14 +198,14 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 setResult(2, intent);
                 finish();
                 break;
-            case R.id.popupNameDelBtn:  //운동 이름 삭제
+            case R.id.popupNameDelBtn:     //운동 이름 삭제
                 nameTex.setText("");       //운동 이름 삭제
                 nameTex.requestFocus();    //운동 이름 텍뷰로 포커스
                 //포커스 시 키보드 표시
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 inputMethodManager.showSoftInput(nameTex, InputMethodManager.SHOW_IMPLICIT);
                 break;
-            case R.id.popupPlusBtn:      //세트수 추가
+            case R.id.popupPlusBtn:        //세트수 추가
                 if(setNum < maxSet) {
                     setNum++;
                     setTex.setText(String.valueOf(setNum));
@@ -255,7 +255,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                     setTex.setText(String.valueOf(setNum));
                     gridLay.removeView(volEdit[setNum]);         //선택된 Edit 삭제
                     gridLay.removeView(slash[setNum]);
-                    gridLay.removeView(numEdit[setNum]);         //선`택된 Edit 삭제
+                    gridLay.removeView(numEdit[setNum]);         //선택된 Edit 삭제
                 }
                 break;
         }
@@ -312,7 +312,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
 
             String selectedType = typeSpi.getSelectedItem().toString(),      //선택된 스피너
                     selectedName = nameTex.getText().toString(),             //이름 체크
-                    selectedVol = volBuilder.toString(),                    //무게 체크
+                    selectedVol = volBuilder.toString(),                     //무게 체크
                     selectedNum = numBuilder.toString();
 
             DBHelper helper = new DBHelper(getApplication(), "record.db", null, 1);

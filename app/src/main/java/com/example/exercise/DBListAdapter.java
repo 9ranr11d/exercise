@@ -17,7 +17,7 @@ import java.util.Set;
 //리사이클뷰
 public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder> {
     private ArrayList<Exercise> localDataSet;
-    private HashMap<Integer, String> chkMap = new HashMap<>();
+    private HashMap<Integer, String> checkedMap = new HashMap<>();
     private HashMap<Integer, String> allListMap = new HashMap<>();
     //목록의 한줄의 틀
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +63,7 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
         holder.setNumTex.setText(tempStr[4]);                                              //세트 수
         holder.volumeTex.setText(MainActivity.setStrFormat(tempStr[5], tempStr[6]));      //무게
         //checkedMap에 저장되어있는 체크유무를 판별(처음에는 체크돼있는게 없으니 모두 false)
-        if(chkMap.containsKey(position))    //해당되는 키가 있으면 true
+        if(checkedMap.containsKey(position))    //해당되는 키가 있으면 true
             holder.chk.setChecked(true);
         else
             holder.chk.setChecked(false);
@@ -73,9 +73,9 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 if(holder.chk.isChecked())
-                    chkMap.put(tempPosition, tempStr[0]);  //('순서', 'SEQ')
+                    checkedMap.put(tempPosition, tempStr[0]);  //('순서', 'SEQ')
                 else
-                    chkMap.remove(tempPosition);            //해당 위치의 Map 데이터 삭제
+                    checkedMap.remove(tempPosition);            //해당 위치의 Map 데이터 삭제
             }
         });
     }
@@ -86,16 +86,17 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
     }
     //체크되어 있는 항목들의 position과 SEQ를 내보니기
     public HashMap<Integer, String> getCheckedList() {
-        HashMap<Integer, String> tempCheckedMap = new HashMap<>(chkMap);
+        HashMap<Integer, String> tempCheckedMap = new HashMap<>(checkedMap);
 
-        chkMap.clear();
+        checkedMap.clear();
 
         return tempCheckedMap;
     }
     //선택된 항목을 리사이클뷰에서 삭제
     public void delList() {
-        Set<Integer> checkedKeySet = chkMap.keySet();                           //체크된 내역('순서', 'SEQ')을 가져옴
+        Set<Integer> checkedKeySet = checkedMap.keySet();                       //체크된 내역('순서', 'SEQ')을 가져옴
         ArrayList<Integer> checkedKeyList = new ArrayList<>(checkedKeySet);
+
         Collections.sort(checkedKeyList, Collections.reverseOrder());           //'SEQ'가 아니라 현재 리스트의 '순서'로 삭제하기에 밑에서부터 삭제해야 순서가 바뀌지 않음
 
         Iterator checkedKeyIterator = checkedKeyList.iterator();
@@ -109,9 +110,9 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
     public void setSelectAll(int mode) {
         if(mode == 0) {
             for(int i = 0; i < localDataSet.size(); i++)
-                chkMap.put(i, allListMap.get(i));
+                checkedMap.put(i, allListMap.get(i));
         }else
-            chkMap.clear();
+            checkedMap.clear();
 
         notifyDataSetChanged();     //리스트 새로고침
     }
