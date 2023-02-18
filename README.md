@@ -1,5 +1,5 @@
 # 프로젝트 : EXERCISE
-exercise 0.1.2
+exercise 1.0.2
 ## 프로젝트 소개
 
 ### 제작 동기
@@ -8,10 +8,10 @@ exercise 0.1.2
 운동부위는 사람이라는 신체 특성상 오른쪽, 왼쪽으로 두 부분을 나뉘기에 **균형있게** 발달 시키는게 또 다른 목표이기 때문이다.
 
 내가 알기로는 **근육의 발달**의 가장 중요한 개념은 **점진적 과부하**인데 점진적 과부하에 영향을 주는 요인은 크게 4가지라고 본다.<br>
-- 무게
-- 세트 수
-- 세트 당 횟수
-- 쉬는 시간
+> - 무게
+> - 세트 수
+> - 세트 당 횟수
+> - 쉬는 시간
 
 멀티플레이가 안되는 나로써는 저 4가지 요인과 자세까지 신경쓰면서 운동을 하려니 도저히 자세에만 신경 쓸 수 없었다.<br>
 그래서 자세를 제외한 4가지 요인들을 최대한 **배제**시키기로 했다.
@@ -36,34 +36,35 @@ exercise 0.1.2
 ### 탭 : [StopwatchMenu.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/StopwatchMenu.java)
 
 #### 기능
-- 스탑워치
-- 1초마다 소리
+> - 스탑워치
+> - 1초마다 소리
 
 ### 탭 : [TimerMenu.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerMenu.java)
 
 #### 기능
-- 타이머 -> [TimerScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerScene.java)
-- 기록 -> [RecordScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordScene.java)
-- 기록 예약 -> [RecordScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordScene.java)
-- **횟수 임시저장** -> [TimerScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerScene.java)
-- 세트 수 조정
-- 쉬는 시간 조정
-- 푸쉬 알림 -> [TimerScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerScene.java)
+> - 타이머 -> [TimerScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerScene.java)
+> - 기록 -> [RecordScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordScene.java)
+> - 기록 예약 -> [RecordScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordScene.java)
+> - **횟수 임시저장** -> [TimerScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerScene.java)
+> - 세트 수 조정
+> - 쉬는 시간 조정
+> - 푸쉬 알림 -> [TimerScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerScene.java)
 
 ### 탭 : [RecordMenu.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordMenu.java)
-- 기록 추가/수정/삭제 -> [CalendarScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/CalendarScene.java) ->
+> - 기록 추가/수정/삭제 -> [CalendarScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/CalendarScene.java) ->
 [PopupActivity.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/PopupActivity.java)
-- 기록 엑셀로 내보내기 -> [DBManagePopup.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/DBManagePopup.java) ->
+> - 기록 엑셀로 내보내기 -> [DBManagePopup.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/DBManagePopup.java) ->
 [DBListAdapter.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/DBListAdapter.java)
-- **날짜별로 운동부위 빈도 수 비교 후 색 지정**
+> - **날짜별로 운동부위 빈도 수 비교 후 색 지정**
+> - 기록 검색 -> [DBManagePopup.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/DBManagePopup.java)
 
 ### 탭 : [SettingScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/SettingScene.java)
-- 테마 설정
-- 쉬는 시간 기본값 설정
-- 최대 세트 수 설정
+> - 테마 설정
+> - 쉬는 시간 기본값 설정
+> - 최대 세트 수 설정
 
 ## 특이사항 (*가독성을 위해 실제 코드와 다를 수 있습니다.*)
-- DB에 바로 연결하지 않고, exercise라는 객체에 담고, 데이터를 처리
+> - DB에 바로 연결하지 않고, exercise라는 객체에 담고, 데이터를 처리
 
 ``` java
 //Exercise.java
@@ -374,3 +375,56 @@ public void setSelectAll(int mode) {
     notifyDataSetChanged();     //새로고침
 }
 ```
+- 모든 기록 중에서 원하는 검색어(이름)을 통해 기록 검색 가능
+```java
+//DBManagePopup.java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_dbmanage_popup);
+    //searchView
+    nameSearch = findViewById(R.id.manageNameSearch);
+
+    nameSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {                    //searchView의 텍스트 변화감지
+            makeRecycler(MainActivity.exerciseDAO.searchNameObj(s));    //현재 searchView의 텍스트로
+            return false;                                               //같은 이름의 리스트를 표시
+        }
+    });
+    makeRecycler(MainActivity.exerciseDAO.exerciseList);                //처음에는 모든 리스트 표시
+}
+//리사이클뷰 생성
+private void makeRecycler(ArrayList<Exercise> list) {
+    RecyclerView recyclerView = findViewById(R.id.recyclerView);
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager((Context) this);
+    recyclerView.setLayoutManager(linearLayoutManager);
+    listAdapter = new DBListAdapter(list);
+    recyclerView.setAdapter(listAdapter);
+}
+//exerciseDAO.java
+//이름과 일치하는 객체목록 내보내기
+public ArrayList<Exercise> searchNameObj(String str) {
+    ArrayList<Exercise> resultList = new ArrayList<>();
+    for(Exercise exercise : exerciseList) {
+        if(exercise.getName().toLowerCase().contains(str))      //포함되는 단어 모두
+        resultList.add(exercise);
+    }
+
+    return resultList;
+}
+```
+## 최신내용
+- 1.0.0
+> 1. 'DBManagePopup'에 검색기능 추가
+> 2. 'TimerScene'에 'DBManagePopup'을 볼 수 있는 버튼 추가
+- 1.0.1
+> 1. 'TimerScene'이 종료 될 시 'DBManagePopup' 닫은 메커니즘 추가
+- 1.0.2
+> 1. 'TimerScene'이 종료 될 시 'DBmanagePopup'이 *열려 있을 시* 닫는 메커니즘 추가
+> 2. 앱을 종료 시 'MainActivity'에 모든 notification 알람 끄는 메커니즘 추가
