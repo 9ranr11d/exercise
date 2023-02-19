@@ -1,5 +1,5 @@
 # 프로젝트 : EXERCISE
-exercise 1.0.3
+Version.1.0.4
 ## 프로젝트 소개
 
 ### 제작 동기
@@ -421,4 +421,6 @@ public ArrayList<Exercise> searchNameObj(String str) {
 > 2. 앱을 종료 시 'MainActivity'에 모든 notification 알람 끄도록 수정
 - 1.0.3
 > 1. 'DBManagePopup' 검색기능을 이용해 검색 후 삭제 시 삭제 되지 않던 버그 수정
-> 2. 'DBManagePopup' 검색기능 사용 중 화면의 다른 곳 클릭 시 키보드 내려가게 수정
+> 2. 'DBManagePopup' 검색기능 사용 중 화면의 다른 곳 클릭 시 키보드가 내려가게 수정
+- 1.0.4
+> 1. 'PopupActivity' 이름, 무게, 횟수를 입력 후 다른 곳 클릭 시 키보드가 내려가게 수정
