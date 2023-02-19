@@ -1,5 +1,5 @@
 # 프로젝트 : EXERCISE
-exercise 1.0.2
+exercise 1.0.3
 ## 프로젝트 소개
 
 ### 제작 동기
@@ -34,14 +34,10 @@ exercise 1.0.2
 ## 기능 소개
 
 ### 탭 : [StopwatchMenu.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/StopwatchMenu.java)
-
-#### 기능
 > - 스탑워치
 > - 1초마다 소리
 
 ### 탭 : [TimerMenu.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerMenu.java)
-
-#### 기능
 > - 타이머 -> [TimerScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/TimerScene.java)
 > - 기록 -> [RecordScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordScene.java)
 > - 기록 예약 -> [RecordScene.java](https://github.com/9ranr11d/exercise/blob/master/app/src/main/java/com/example/exercise/RecordScene.java)
@@ -64,8 +60,7 @@ exercise 1.0.2
 > - 최대 세트 수 설정
 
 ## 특이사항 (*가독성을 위해 실제 코드와 다를 수 있습니다.*)
-> - DB에 바로 연결하지 않고, exercise라는 객체에 담고, 데이터를 처리
-
+- DB에 바로 연결하지 않고, exercise라는 객체에 담고, 데이터를 처리
 ``` java
 //Exercise.java
 Exercise(int seq, String eDate, String eType, String eName, int setN, String eVolume, String eNumber) {
@@ -127,7 +122,6 @@ protected void onCreate(Bundle savedInstanceState) {
 ```
 
 - 같은 날짜안의 기록들의 운동부위의 빈도 수를 분석해 일정표시 색을 달리함
-
 ``` xml
 <!--strings.xml-->
 <string-array name="exerciseType">
@@ -181,7 +175,6 @@ mCalendarView.addDecorator(new EventDecorator(colorAry[colorNum],
 ```
 
 - DB의 기본키(seq)를 auto increment가 아닌 자체적으로 처리를 위해 SharedPreferences로 별도로 변수를 저장했고, 그로 인해 예기치 못한 종료로 seq 미저장 될 때의 SQLiteConstraintException 예외처리
-
 ``` java
 private void tInsertSeq(String selectDate, String selectType, String selectName, String selectVolume, String selectNumber) {
     DBHelper helper = new DBHelper(getActivity(), "record.db", null, 1);
@@ -213,7 +206,6 @@ private void tInsertSeq(String selectDate, String selectType, String selectName,
 ```
 
 - 세트 당 횟수를 임시저장 후 기록시 저장된 데이터 자동 입력
-
 ``` java
 //TimerMenu.java
 @Override
@@ -324,7 +316,6 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle sa
 ```
 
 - RecyclerView 전체 선택과, 체크 여부 기록을 위한 Map
-
 ``` java
 //DBListAdapter.java
 private ArrayList<Exercise> localDataSet;
@@ -424,7 +415,10 @@ public ArrayList<Exercise> searchNameObj(String str) {
 > 1. 'DBManagePopup'에 검색기능 추가
 > 2. 'TimerScene'에 'DBManagePopup'을 볼 수 있는 버튼 추가
 - 1.0.1
-> 1. 'TimerScene'이 종료 될 시 'DBManagePopup' 닫은 메커니즘 추가
+> 1. 'TimerScene'이 종료 될 시 'DBManagePopup' 닫도록 수정
 - 1.0.2
-> 1. 'TimerScene'이 종료 될 시 'DBmanagePopup'이 *열려 있을 시* 닫는 메커니즘 추가
-> 2. 앱을 종료 시 'MainActivity'에 모든 notification 알람 끄는 메커니즘 추가
+> 1. 'TimerScene'이 종료 될 시 'DBmanagePopup'이 *열려 있을 시* 닫도록 수정
+> 2. 앱을 종료 시 'MainActivity'에 모든 notification 알람 끄도록 수정
+- 1.0.3
+> 1. 'DBManagePopup' 검색기능을 이용해 검색 후 삭제 시 삭제 되지 않던 버그 수정
+> 2. 'DBManagePopup' 검색기능 사용 중 화면의 다른 곳 클릭 시 키보드 내려가게 수정
