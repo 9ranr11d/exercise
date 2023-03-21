@@ -124,7 +124,7 @@ public class SettingScene extends AppCompatActivity implements View.OnClickListe
     private void showRestartDialog(int editStr, String varName) {
         AlertDialog.Builder restartDialog = new AlertDialog.Builder(this);
         restartDialog.setTitle("주의")
-                .setMessage("확인을 누르면 앱 재시작됍니다.")
+                .setMessage("확인을 누르면 앱 재시작 됩니다.")
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

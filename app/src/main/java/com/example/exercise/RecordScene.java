@@ -6,12 +6,14 @@ import androidx.core.content.ContextCompat;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -208,5 +210,22 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         super.onDestroy();
         if(isSTimerFlag)
             TimerScene.isSRecordFlag = false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();         //현재 포커스하고 있는 뷰 가져오기
+        if(focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);   //포커스 있는 뷰를 영역으로 지정
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if(!rect.contains(x, y)) {              //클릭한 위치가 영역내에 없으면 실행?
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(inputMethodManager != null)
+                    inputMethodManager.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

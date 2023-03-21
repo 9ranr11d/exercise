@@ -102,6 +102,23 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         Intent recdPopupIntent = getIntent();
         date = recdPopupIntent.getStringExtra("SELECTED_DATE");
         dateTex.setText(date);    //받아온 날짜를 제목으로 지정
+        if(recdPopupIntent.getBooleanExtra("IS_ONLY_READ", false)) {
+            okBtn.setEnabled(false);
+            delBtn.setEnabled(false);
+            plusBtn.setEnabled(false);
+            minusBtn.setEnabled(false);
+            nameDelBtn.setEnabled(false);
+            nameTex.setEnabled(false);
+            typeSpi.setEnabled(false);
+        }else {
+            okBtn.setEnabled(true);
+            delBtn.setEnabled(true);
+            plusBtn.setEnabled(true);
+            minusBtn.setEnabled(true);
+            nameDelBtn.setEnabled(true);
+            nameTex.setEnabled(true);
+            typeSpi.setEnabled(true);
+        }
         //1 : 수정, 삭제, 0 : 추가
         isAddFlag = recdPopupIntent.getBooleanExtra("IS_ADD_FLAG", true);
         if(!isAddFlag) {

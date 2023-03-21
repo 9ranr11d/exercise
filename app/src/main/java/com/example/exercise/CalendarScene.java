@@ -78,6 +78,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
             case R.id.sCalendarAddBtn:     //운동 추가
                 Intent addIntent = new Intent(getApplication(), PopupActivity.class);
                 addIntent.putExtra("IS_ADD_FLAG", true);
+                addIntent.putExtra("IS_ONLY_READ", false);
                 addIntent.putExtra("SELECTED_DATE", selectedDate);    //선택된 날짜를 포함
 
                 launcher.launch(addIntent);
@@ -130,6 +131,7 @@ public class CalendarScene extends AppCompatActivity implements View.OnClickList
 
                         Intent toPopupIntent = new Intent(getApplication(), PopupActivity.class);
                         toPopupIntent.putExtra("IS_ADD_FLAG", false);
+                        toPopupIntent.putExtra("IS_ONLY_READ", false);
                         toPopupIntent.putExtra("SEQ", tempSeq);
                         toPopupIntent.putExtra("SELECTED_DATE", selectedDate);
                         toPopupIntent.putExtra("TYPE", tempType);

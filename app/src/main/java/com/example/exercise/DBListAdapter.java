@@ -1,5 +1,6 @@
 package com.example.exercise;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,17 @@ import java.util.Iterator;
 import java.util.Set;
 //리사이클뷰
 public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder> {
+    private final String TAG = "DBListAdapter";
     private ArrayList<Exercise> localDataSet;
     private HashMap<Integer, String> checkedMap = new HashMap<>();
     private HashMap<Integer, String> allListMap = new HashMap<>();
+
+    interface OnItemClickListener {
+        void onClick(Exercise target, int position);
+    }
+
+    private OnItemClickListener itemClickListener;
+
     //목록의 한줄의 틀
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView dateTex, typeTex, nameTex, setNumTex, volumeTex;
@@ -57,7 +66,16 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
         String str = localDataSet.get(position).toString();
         String[] tempStr = str.split(":");
 
-        holder.dateTex.setText(tempStr[1].substring(2).replace("-", ""));  //날짜 (yyMMdd)
+        //체크시 checkedMap에 저장
+        int tempPosition = position;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemClickListener.onClick(localDataSet.get(tempPosition), tempPosition);
+            }
+        });
+
+                holder.dateTex.setText(tempStr[1].substring(2).replace("-", ""));  //날짜 (yyMMdd)
         holder.typeTex.setText(tempStr[2]);                                                //운동부위
         holder.nameTex.setText(tempStr[3]);                                                //운동이름
         holder.setNumTex.setText(tempStr[4]);                                              //세트 수
@@ -67,8 +85,6 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
             holder.chk.setChecked(true);
         else
             holder.chk.setChecked(false);
-        //체크시 checkedMap에 저장
-        int tempPosition = position;
         holder.chk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,5 +131,9 @@ public class DBListAdapter extends RecyclerView.Adapter<DBListAdapter.ViewHolder
             checkedMap.clear();
 
         notifyDataSetChanged();     //리스트 새로고침
+    }
+
+    public void setItemClickListener(OnItemClickListener onItemClickListener) {
+        this.itemClickListener = onItemClickListener;
     }
 }

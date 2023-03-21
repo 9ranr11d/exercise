@@ -1,5 +1,7 @@
 package com.example.exercise;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -53,6 +55,8 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
 
     public static Activity dbManagePopup;
 
+    private ActivityResultLauncher<Intent> launcher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +91,12 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if(result.getResultCode() == Activity.RESULT_CANCELED) {
+                makeToast("취소 되었습니다.");
+            }
+        });
+
         makeRecycler(MainActivity.exerciseDAO.exerciseList);
 
         Intent recdManageIntent = getIntent();
@@ -112,6 +122,24 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
         recyclerView.setLayoutManager(linearLayoutManager);
         listAdapter = new DBListAdapter(list);
         recyclerView.setAdapter(listAdapter);
+
+        listAdapter.setItemClickListener(new DBListAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(Exercise target, int position) {
+                Intent intentOfClicked = new Intent(getApplication(), PopupActivity.class);
+                intentOfClicked.putExtra("IS_ADD_FLAG", false);
+                intentOfClicked.putExtra("IS_ONLY_READ", true);
+                intentOfClicked.putExtra("SELECTED_DATE", target.getDate());
+                intentOfClicked.putExtra("SEQ", target.getSeq());
+                intentOfClicked.putExtra("TYPE", target.getType());
+                intentOfClicked.putExtra("NAME", target.getName());
+                intentOfClicked.putExtra("SET_NUM", target.getSetNum());
+                intentOfClicked.putExtra("VOLUME", target.getVolume());
+                intentOfClicked.putExtra("NUMBER", target.getNumber());
+
+                launcher.launch(intentOfClicked);
+            }
+        });
     }
     @Override
     public void onClick(View view) {
