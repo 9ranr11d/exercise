@@ -82,3 +82,5 @@ Version.1.0.6
 > 1. 'TimerScene'에서 'DBManagePopup'으로 가는 버튼 추가
 - 1.0.6
 > 1. 'DBManagePopup'에 기록을 누를 시 'PopupActivity'로 가게해 자세한 기록 확인 가능
+- 1.2.0
+> 1. 'DMManagePopup'에 엑셀로 내보내기 방식 변경
