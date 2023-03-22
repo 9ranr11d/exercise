@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -258,25 +259,21 @@ public class DBManagePopup extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        File xlsFile = new File(getExternalFilesDir(null), fileName + ".xls");
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File xlsFile = new File(dir, fileName + ".xls");
+
         if (xlsFile.exists())
             xlsFile.delete();
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(xlsFile);
             workbook.write(fileOutputStream);
+            makeToast(fileName + ".xls가 " + Environment.DIRECTORY_DOWNLOADS + "에 저장 되었습니다.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        makeToast(xlsFile.getAbsolutePath() + "에 저장되었습니다.");
-
-        Uri path = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", xlsFile);
-        Intent saveIntent = new Intent(Intent.ACTION_SEND);
-        saveIntent.setType("application/excel");
-        saveIntent.putExtra(Intent.EXTRA_STREAM, path);
-        startActivity(Intent.createChooser(saveIntent,"엑셀파일로 내보내기"));
     }
 
     @Override
