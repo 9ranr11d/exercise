@@ -51,6 +51,7 @@
         <EditText
             android:layout_width="180dp"
             android:layout_height="wrap_content"
+            android:textSelectHandle="@drawable/image_text_handle"
             android:id="@+id/popupNameTex" />
 
         <Button

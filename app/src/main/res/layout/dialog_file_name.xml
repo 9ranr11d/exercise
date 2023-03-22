@@ -9,6 +9,7 @@
         android:id="@+id/dialogFileEdit"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:textSelectHandle="@drawable/image_text_handle"
         android:hint="파일 이름"
         android:textSize="15sp" />
 

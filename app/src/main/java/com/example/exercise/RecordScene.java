@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -108,9 +109,10 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
             volEdit[i].setHighlightColor(highlightColor);
             volEdit[i].setWidth(editSize);
             volEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //Edit에 숫자만 입력 가능
+            volEdit[i].setImeOptions(EditorInfo.IME_ACTION_DONE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 volEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
-//                    numberEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.edit_text_view_handle));
+                volEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.image_text_handle));
             }
 
             gridLay.addView(volEdit[i]);
@@ -133,9 +135,10 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
             numEdit[i].setHighlightColor(highlightColor);
             numEdit[i].setWidth(editSize);
             numEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);    //Edit에 숫자만 입력 가능
+            numEdit[i].setImeOptions(EditorInfo.IME_ACTION_DONE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 numEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
-//                    numberEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.edit_text_view_handle));
+                numEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.image_text_handle));
             }
 
             gridLay.addView(numEdit[i]);
@@ -210,22 +213,5 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         super.onDestroy();
         if(isSTimerFlag)
             TimerScene.isSRecordFlag = false;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        View focusView = getCurrentFocus();         //현재 포커스하고 있는 뷰 가져오기
-        if(focusView != null) {
-            Rect rect = new Rect();
-            focusView.getGlobalVisibleRect(rect);   //포커스 있는 뷰를 영역으로 지정
-            int x = (int) ev.getX(), y = (int) ev.getY();
-            if(!rect.contains(x, y)) {              //클릭한 위치가 영역내에 없으면 실행?
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if(inputMethodManager != null)
-                    inputMethodManager.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
-                focusView.clearFocus();
-            }
-        }
-        return super.dispatchTouchEvent(ev);
     }
 }

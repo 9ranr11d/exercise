@@ -76,6 +76,7 @@
             android:id="@+id/settingDefTimeEdit"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:textSelectHandle="@drawable/image_text_handle"
             android:textSize="12sp"
             android:inputType="number"
             android:hint="단위 : 초" />
@@ -108,6 +109,7 @@
             android:id="@+id/settingMaxSetEdit"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:textSelectHandle="@drawable/image_text_handle"
             android:textSize="12sp"
             android:inputType="number"
             android:hint="세트 수" />

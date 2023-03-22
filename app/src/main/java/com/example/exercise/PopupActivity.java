@@ -151,7 +151,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 volEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     volEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));  //커서 색
-//                    volumeEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.edit_text_view_handle));         //커서 심볼
+                    volEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.image_text_handle));         //커서 심볼
                 }
 
                 gridLay.addView(volEdit[i]);
@@ -173,7 +173,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 numEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     numEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
-//                    numberEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.edit_text_view_handle));
+                    numEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.image_text_handle));
                 }
 
                 gridLay.addView(numEdit[i]);
