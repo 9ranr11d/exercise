@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,6 +62,8 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         nameTex = findViewById(R.id.popupNameTex);
         setTex = findViewById(R.id.popupSetTex);
         dateTex = findViewById(R.id.popupDate);
+
+        nameTex.setImeOptions(EditorInfo.IME_ACTION_DONE);
         //버튼
         okBtn = findViewById(R.id.popupOkBtn);
         cancelBtn = findViewById(R.id.popupCancelBtn);
@@ -149,6 +152,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 volEdit[i].setHighlightColor(highlightColor);            //드래그 시 배경색
                 volEdit[i].setWidth(editSize);
                 volEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);
+                volEdit[i].setImeOptions(EditorInfo.IME_ACTION_DONE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     volEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));  //커서 색
                     volEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.image_text_handle));         //커서 심볼
@@ -171,6 +175,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 numEdit[i].setHighlightColor(highlightColor);
                 numEdit[i].setWidth(editSize);
                 numEdit[i].setInputType(InputType.TYPE_CLASS_NUMBER);
+                numEdit[i].setImeOptions(EditorInfo.IME_ACTION_DONE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     numEdit[i].setTextCursorDrawable(ContextCompat.getDrawable(this, R.drawable.edit_text_view_cursor));
                     numEdit[i].setTextSelectHandle(ContextCompat.getDrawable(this, R.drawable.image_text_handle));
@@ -385,22 +390,5 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
         if(event.getAction() == MotionEvent.ACTION_OUTSIDE)
             return false;
         return true;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        View focusView = getCurrentFocus();         //현재 포커스하고 있는 뷰 가져오기
-        if(focusView != null) {
-            Rect rect = new Rect();
-            focusView.getGlobalVisibleRect(rect);   //포커스 있는 뷰를 영역으로 지정
-            int x = (int) ev.getX(), y = (int) ev.getY();
-            if(!rect.contains(x, y)) {              //클릭한 위치가 영역내에 없으면 실행?
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if(inputMethodManager != null)
-                    inputMethodManager.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
-                focusView.clearFocus();
-            }
-        }
-        return super.dispatchTouchEvent(ev);
     }
 }

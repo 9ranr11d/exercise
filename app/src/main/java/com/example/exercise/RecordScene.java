@@ -34,7 +34,7 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
     private GridLayout gridLay;
     private EditText[] volEdit, numEdit;
     private EditText nameEdit;
-    private Button recordOkBtn, recordCancelBtn;
+    private Button recordOkBtn, recordCancelBtn, nameDelBtn;
     private Spinner typeSpi;
 
     public static Activity recordScene;
@@ -58,11 +58,15 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
         //버튼
         recordOkBtn = findViewById(R.id.sRecordOkBtn);
         recordCancelBtn = findViewById(R.id.sRecordCncBtn);
+        nameDelBtn = findViewById(R.id.button_record_scene_name_delete);
 
         recordOkBtn.setOnClickListener(this);
         recordCancelBtn.setOnClickListener(this);
+        nameDelBtn.setOnClickListener(this);
         //Edit
         nameEdit = findViewById(R.id.sRecordNameEdit);
+
+        nameEdit.setImeOptions(EditorInfo.IME_ACTION_DONE);
         //스피너
         typeSpi = findViewById(R.id.sRecordTypeSpi);
         //스피너 목록
@@ -197,6 +201,13 @@ public class RecordScene extends AppCompatActivity implements View.OnClickListen
             case R.id.sRecordCncBtn:     //취소
                 setResult(RESULT_CANCELED);
                 finish();
+                break;
+            case R.id.button_record_scene_name_delete:
+                nameEdit.setText("");
+                nameEdit.requestFocus();
+                //포커스 시 키보드 표시
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(nameEdit, InputMethodManager.SHOW_IMPLICIT);
                 break;
         }
     }

@@ -13,10 +13,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -240,7 +243,6 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
             case R.id.sTimerStopBtn:      //정지
                 setResult(RESULT_CANCELED);
@@ -298,5 +300,22 @@ public class TimerScene extends AppCompatActivity implements View.OnClickListene
             restTimerTask.cancel();
             restTimerTask = null;
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();         //현재 포커스하고 있는 뷰 가져오기
+        if(focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);   //포커스 있는 뷰를 영역으로 지정
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if(!rect.contains(x, y)) {              //클릭한 위치가 영역내에 없으면 실행?
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(inputMethodManager != null)
+                    inputMethodManager.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }
